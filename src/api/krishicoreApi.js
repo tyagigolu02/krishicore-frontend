@@ -37,6 +37,7 @@ export function normalizeBackendCrops(arr) {
     p: Number(c.targetP_KgHa ?? c.p ?? 60),
     k: Number(c.targetK_KgHa ?? c.k ?? 40),
     season: c.season || 'ALL_SEASON',
+    category: c.cropCategory || c.category || 'CEREAL',
     minPh: Number(c.minPh ?? 6.0), maxPh: Number(c.maxPh ?? 8.2),
     idealMaxTemp: Number(c.idealMaxTemp ?? 28.0), maxSowingRainMm: Number(c.maxSowingRainMm ?? 100),
   }));
@@ -223,3 +224,20 @@ export const adminSaveShop = async (p) => (await fetch(`${API_BASE}/catalog/admi
 export const adminDeleteShop = async (id) => fetch(`${API_BASE}/catalog/admin/shops/${encodeURIComponent(id)}`, { method: 'DELETE', headers: getAuthHeaders() });
 export const adminSaveLab = async (p) => (await fetch(`${API_BASE}/labs/admin`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(p) })).json();
 export const adminPushReportToFarmer = async (p) => (await fetch(`${API_BASE}/labs/push-report`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(p) })).json();
+// 5. Permanent Farm Plot & Crop History Ledger APIs (PostgreSQL)
+export const fetchMyFarms = async () => {
+  const res = await fetch(`${API_BASE}/farms`, { headers: getAuthHeaders() });
+  return res.ok ? res.json() : [];
+};
+export const saveFarmPlotApi = async (payload) => {
+  const res = await fetch(`${API_BASE}/farms`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
+export const addCropHistoryApi = async (plotId, payload) => {
+  const res = await fetch(`${API_BASE}/farms/${plotId}/history`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+};
+export const deleteFarmPlotApi = async (plotId) =>
+  fetch(`${API_BASE}/farms/${plotId}`, { method: 'DELETE', headers: getAuthHeaders() });

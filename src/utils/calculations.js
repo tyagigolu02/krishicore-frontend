@@ -108,8 +108,8 @@ export function computeRemedies(metrics, totalAcres, phosSource, plan) {
   return r;
 }
 
-// 7-Factor Dynamic Soil & Weather Crop Suitability Engine (Zero Static Recommendations!)
-export function calculateRecommendedCrops(metrics, weather = null, customCatalog = null) {
+// 8-Factor Dynamic Soil + Weather + ICAR Crop Rotation Engine (Returns Top 8 Ranked Crops)
+export function calculateRecommendedCrops(metrics, weather = null, customCatalog = null, previousCropCode = '') {
   const m = metrics || {};
   const month = new Date().getMonth() + 1;
   const rainMm = Number(weather?.totalExpectedRainMm ?? 4);
@@ -121,59 +121,74 @@ export function calculateRecommendedCrops(metrics, weather = null, customCatalog
   if ((month >= 6 && month <= 9) || (rainMm > 45 && maxTemp >= 31)) activeSeason = 'KHARIF';
   else if (month >= 3 && month <= 5 && maxTemp >= 32) activeSeason = 'ZAID';
 
-  const catalog = Array.isArray(customCatalog) && customCatalog.length >= 5 ? customCatalog : DEFAULT_CROP_PROFILES;
+  const catalog = Array.isArray(customCatalog) && customCatalog.length >= 10 ? customCatalog : DEFAULT_CROP_PROFILES;
+  const prevCode = String(previousCropCode || '').trim().toUpperCase();
+  const prevRef = catalog.find(c => (c.code || c.cropCode) === prevCode) || DEFAULT_CROP_PROFILES.find(c => c.code === prevCode);
+  const prevCat = prevRef?.category || prevRef?.cropCategory || '';
 
   return catalog.map((crop) => {
     const code = crop.code || crop.cropCode;
     const ref = DEFAULT_CROP_PROFILES.find(c => c.code === code) || crop;
     const season = ref.season || 'ALL_SEASON';
+    const category = crop.category || ref.category || 'CEREAL';
     let score = 62;
+    let rotationTag = null;
     const rHi = [], rEn = [];
 
     // 1. Season Match
     if (season === activeSeason) { score += 16; rHi.push(`${activeSeason} मौसम उत्तम`); rEn.push(`Ideal ${activeSeason} season`); }
-    else if (season === 'ALL_SEASON') { score += 8; }
-    else { score -= 34; rHi.push(`बेमौसम (${season})`); rEn.push(`Off-season (${season})`); }
+    else if (season === 'ALL_SEASON') { score += 9; }
+    else { score -= 35; rHi.push(`बेमौसम (${season})`); rEn.push(`Off-season (${season})`); }
 
-    // 2. Live Temperature Curve
+    // 2. ICAR Crop Rotation Intelligence (Permanent Farm Memory)
+    if (prevCode) {
+      if (prevCode === code && code !== 'SUGARCANE') {
+        score -= 18;
+        rotationTag = { type: 'WARN', hi: '⚠️ पिछली बार भी यही बोया था', en: '⚠️ Monocrop Risk' };
+        rHi.push('लगातार एक फसल से कीट व रोग बढ़ते हैं — फसल चक्र बदलें');
+        rEn.push('Avoid repeating same crop — rotate to prevent pests');
+      } else if (prevCat === 'CEREAL' && category === 'PULSE') {
+        score += 14;
+        rotationTag = { type: 'BOOST', hi: '🌱 सर्वश्रेष्ठ फसल चक्र (+N)', en: '🌱 Best Rotation (+N)' };
+        rHi.push('अनाज के बाद दलहन से मिट्टी में प्राकृतिक नाइट्रोजन बढ़ेगा');
+        rEn.push('Legume after cereal restores soil Nitrogen');
+      } else if (prevCat === 'PULSE' && ['CEREAL', 'VEGETABLE'].includes(category)) {
+        score += 11;
+        rotationTag = { type: 'BOOST', hi: '✨ दलहन के बाद बंपर उपज', en: '✨ Post-Pulse Boost' };
+        rHi.push('पिछली दलहनी फसल की नाइट्रोजन से इस बार कम खाद में अधिक उपज');
+        rEn.push('Benefits from residual Nitrogen of last pulse');
+      } else if (prevCat !== category) {
+        score += 5;
+      }
+    }
+
+    // 3. Temperature & Rain
     const tempDiff = Math.abs(maxTemp - (ref.idealMaxTemp ?? 28));
-    if (tempDiff <= 4) { score += 10; rHi.push(`${maxTemp}°C तापमान सटीक`); rEn.push(`${maxTemp}°C temp optimal`); }
-    else if (tempDiff > 8) { score -= 16; rHi.push(`तापमान (${maxTemp}°C) प्रतिकूल`); rEn.push(`Temp ${maxTemp}°C stressed`); }
+    if (tempDiff <= 4) { score += 9; rHi.push(`${maxTemp}°C तापमान सटीक`); rEn.push(`${maxTemp}°C optimal`); }
+    else if (tempDiff > 8) { score -= 15; }
+    if (rainMm > (ref.maxSowingRainMm ?? 120)) { score -= 26; rHi.push(`⚠️ ${rainMm}mm बारिश जोखिम`); rEn.push(`⚠️ Rain risk`); }
 
-    // 3. Live 16-Day Rainfall Tolerance
-    if (rainMm > (ref.maxSowingRainMm ?? 120)) { score -= 26; rHi.push(`⚠️ ${rainMm}mm बारिश का खतरा`); rEn.push(`⚠️ ${rainMm}mm rain risk`); }
-    else if (rainMm > 25 && ['PADDY', 'SOYBEAN', 'SUGARCANE', 'COTTON'].includes(code)) { score += 9; rHi.push(`${rainMm}mm बारिश लाभकारी`); rEn.push(`Rain boosts growth`); }
+    // 4. Soil Chemistry (pH, EC, N, S, OC)
+    if (ph >= (ref.minPh ?? 6) && ph <= (ref.maxPh ?? 8.2)) { score += 7; rHi.push(`pH ${ph} अनुकूल`); rEn.push(`pH ${ph} fits`); }
+    else { score -= 16; rHi.push(`pH ${ph} असंतुलित`); rEn.push(`pH ${ph} mismatch`); }
 
-    // 4. Soil pH Fit
-    if (ph >= (ref.minPh ?? 6) && ph <= (ref.maxPh ?? 8.2)) { score += 8; rHi.push(`pH ${ph} अनुकूल`); rEn.push(`pH ${ph} fits`); }
-    else { score -= 18; rHi.push(`pH ${ph} असंतुलित`); rEn.push(`pH ${ph} mismatch`); }
-
-    // 5. Soil Salinity (EC) Sensitivity
     if (ec > 1.0) {
-      if (['MUSTARD', 'COTTON', 'WHEAT'].includes(code)) { score += 9; rHi.push(`लवणीय मिट्टी (EC ${ec}) सहनशील`); rEn.push(`Salt tolerant (EC ${ec})`); }
-      else { score -= 15; rHi.push(`उच्च EC (${ec}) नुकसानदेह`); rEn.push(`Sensitive to EC ${ec}`); }
+      if (['BARLEY', 'MUSTARD', 'COTTON', 'WHEAT'].includes(code)) { score += 10; rHi.push(`लवणीय मिट्टी (EC ${ec}) सहनशील`); rEn.push(`Salt tolerant`); }
+      else { score -= 14; }
     }
-
-    // 6. Soil Nitrogen Match (Legumes vs Heavy Feeders)
-    if (n < 220 && ['CHICKPEA', 'SOYBEAN', 'TUR_ARHAR', 'MOONG'].includes(code)) {
-      score += 12; rHi.push(`कम N (${n}) में दलहन नाइट्रोजन बढ़ाएगी`); rEn.push(`Fixes N in low-N (${n}) soil`);
-    } else if (n >= 280 && ['WHEAT', 'SUGARCANE', 'PADDY', 'MAIZE'].includes(code)) {
-      score += 10; rHi.push(`उच्च N (${n}) से बंपर उपज`); rEn.push(`High N (${n}) maximizes yield`);
-    } else if (n < 180 && ['SUGARCANE', 'PADDY'].includes(code)) {
-      score -= 10; rHi.push(`नाइट्रोजन (${n}) बहुत कम`); rEn.push(`Low N (${n}) for heavy feeder`);
-    }
-
-    // 7. Sulphur & Organic Carbon Bonus
-    if (s >= 12 && code === 'MUSTARD') { score += 7; rHi.push(`सल्फर (${s}) से तेल मात्रा बढ़ेगी`); rEn.push(`High S boosts oil %`); }
-    if (oc >= 0.6 && ['SUGARCANE', 'WHEAT', 'PADDY'].includes(code)) { score += 5; }
+    if (n < 220 && category === 'PULSE') { score += 9; rHi.push('कम नाइट्रोजन में उत्तम'); rEn.push('Great for low-N soil'); }
+    else if (n >= 270 && ['WHEAT', 'POTATO', 'SUGARCANE', 'PADDY', 'TOMATO'].includes(code)) { score += 8; rHi.push('उच्च नाइट्रोजन से अधिक पैदावार'); rEn.push('High N boosts yield'); }
+    if (s >= 12 && ['MUSTARD', 'ONION', 'GARLIC'].includes(code)) { score += 6; rHi.push('सल्फर से गुणवत्ता बढ़ेगी'); rEn.push('Sulphur boosts quality'); }
+    if (oc >= 0.55 && category === 'VEGETABLE') { score += 6; }
 
     return {
-      cropCode: code, nameHi: crop.name || ref.name, nameEn: crop.nameEn || ref.nameEn || crop.name,
-      suitabilityScore: Math.max(15, Math.min(98, Math.round(score))),
+      cropCode: code, category, rotationTag,
+      nameHi: crop.name || ref.name, nameEn: crop.nameEn || ref.nameEn || crop.name,
+      suitabilityScore: Math.max(15, Math.min(99, Math.round(score))),
       expectedYield: ref.expectedYieldHi || '18–24 क्विंटल/एकड़', expectedYieldEn: ref.expectedYieldEn || '18–24 Qtl/Acre',
       reasonHi: rHi.slice(0, 3).join(' · '), reasonEn: rEn.slice(0, 3).join(' · ')
     };
-  }).sort((a, b) => b.suitabilityScore - a.suitabilityScore).slice(0, 3);
+  }).sort((a, b) => b.suitabilityScore - a.suitabilityScore).slice(0, 8);
 }
 
 export function generateHindiSpeechText(plan, metrics, areaValue, areaUnit, unitNamesHi, phosSource, totalAcres) {
