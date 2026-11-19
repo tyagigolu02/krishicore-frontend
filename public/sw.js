@@ -1,7 +1,7 @@
 const STATIC_CACHE = 'krishicore-static-v1';
 const API_CACHE = 'krishicore-api-v1';
 
-const APP_SHELL = ['/', '/index.html', '/manifest.json'];
+const APP_SHELL = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -56,6 +56,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request).then((res) => res || caches.match('/index.html')))
+      .catch(() => caches.match(request).then((res) => res || caches.match('./index.html')))
   );
 });

@@ -1,5 +1,5 @@
 // src/api/krishicoreApi.js
-const API_BASE = '/api/v1';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || '/api/v1').replace(/\/+$/, '');
 const CACHE_PREFIX = 'krishicore_pwa_cache_';
 
 function getAuthHeaders(isMultipart = false) {
@@ -209,7 +209,20 @@ export async function geocodeByPincodeOrDistrict(pincode, district) {
 }
 
 // 4. Spring Boot Backend REST Helpers
-export async function checkBackendHealth() { try { return (await fetch(`${API_BASE}/catalog/init`)).ok; } catch { return false; } }
+export async function checkBackendHealth() {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const res = await fetch(`${API_BASE}/catalog/init`, {
+      signal: controller.signal,
+      headers: getAuthHeaders(),
+    });
+    clearTimeout(timeoutId);
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 export const fetchCatalogInit = async () => (await fetch(`${API_BASE}/catalog/init`, { headers: getAuthHeaders() })).json();
 export const sendOtp = async (m) => (await fetch(`${API_BASE}/auth/send-otp`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify({ mobileNumber: String(m).slice(-10) }) })).json();
 export const verifyOtp = async (m, otp, fullName, preferredLanguage, extra = {}) => (await fetch(`${API_BASE}/auth/verify-otp`, { method: 'POST', headers: getAuthHeaders(), credentials: 'include', body: JSON.stringify({ mobileNumber: String(m).slice(-10), otp: String(otp).trim(), fullName, preferredLanguage, ...extra }) })).json();

@@ -2,14 +2,14 @@
   "name": "KrishiCore — स्मार्ट मृदा एवं खाद सहायक",
   "short_name": "KrishiCore",
   "description": "AI Soil Health Card Scanner, Pan-India Land Area Calculator, ICAR Fertilizer Advisory & Nearby Labs",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F8FAF5",
   "theme_color": "#1B5E20",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "./favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
