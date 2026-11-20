@@ -26,6 +26,141 @@ export function calculateFromDimensions(length, width, unit) {
   return { sqft: Math.round(sqft), acres, kaccha: acres * 4.8, guntha: acres * 40 };
 }
 
+function buildCropApplicationTimeline(cropCode, phosSource, phosKg, mopKg, ureaKg, znKg, varNote) {
+  const code = String(cropCode || 'WHEAT').toUpperCase();
+  const znHi = znKg > 0 ? ` + ${znKg.toFixed(1)} kg जिंक सल्फेट` : '';
+  const znEn = znKg > 0 ? ` + ${znKg.toFixed(1)} kg Zinc` : '';
+
+  // 1. DALHAN / PULSES (Chana, Matar, Masoor, Moong, Soybean, Tur) -> 100% Basal!
+  if (['CHICKPEA', 'PEA', 'LENTIL', 'MOONG', 'SOYBEAN', 'TUR_ARHAR', 'GROUNDNUT'].includes(code)) {
+    return [
+      {
+        stageHi: 'बुवाई के समय (100% संपूर्ण खाद · Day 0)', stageEn: 'Sowing · 100% Basal (Day 0)',
+        detailHi: `दलहनी फसल में पूरी खाद बुवाई पर दें: ${phosSource} (${phosKg.toFixed(1)} kg) + MOP (${mopKg.toFixed(1)} kg) + यूरिया (${ureaKg.toFixed(1)} kg)${znHi} बीज के नीचे ड्रिल करें।`,
+        detailEn: `Apply 100% ${phosSource} (${phosKg.toFixed(1)} kg) + MOP + starter Urea (${ureaKg.toFixed(1)} kg)${znEn} at sowing.`
+      },
+      {
+        stageHi: 'पहली हल्की सिंचाई · फूल आने से पहले (40–45 दिन)', stageEn: 'Pre-Flowering Irrigation (40–45 Days)',
+        detailHi: 'दलहन में ऊपर से यूरिया न डालें (पत्ते बढ़ेंगे, फलियां कम होंगी)। केवल हल्की सिंचाई करें।',
+        detailEn: 'Do NOT top-dress Urea on pulses. Give light irrigation before flowering.'
+      },
+      {
+        stageHi: 'फली भरने की अवस्था (70–75 दिन)', stageEn: 'Pod-Filling Stage (70–75 Days)',
+        detailHi: 'नमी कम हो तो दूसरी हल्की सिंचाई करें; बेहतर दाने के लिए 2% DAP या NPK 0:52:34 का पर्णीय छिड़काव करें।',
+        detailEn: 'Give light irrigation if dry; optional foliar spray of 2% DAP/NPK for bold grains.'
+      }
+    ];
+  }
+
+  // 2. SUGARCANE (10-12 Month Long Crop)
+  if (code === 'SUGARCANE') {
+    const u3 = (ureaKg / 3).toFixed(1);
+    return [
+      {
+        stageHi: 'बुवाई / नाली में (Basal · Day 0)', stageEn: 'Planting Furrow (Day 0)',
+        detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + 1/3 यूरिया (${u3} kg)${varNote} नालियों में डालें।`,
+        detailEn: `Apply 100% ${phosSource} + MOP + 1/3 Urea (${u3} kg) in furrows at planting.`
+      },
+      {
+        stageHi: 'कल्ले फूटने पर (45–50 दिन · 2री सिंचाई)', stageEn: 'Tillering Stage (45–50 Days)',
+        detailHi: `1/3 यूरिया (${u3} kg)${znHi} निराई-गुड़ाई के बाद सिंचाई कर डालें।`,
+        detailEn: `Apply 1/3 Urea (${u3} kg)${znEn} after weeding & irrigation.`
+      },
+      {
+        stageHi: 'मिट्टी चढ़ाने पर (90–110 दिन · मानसून से पहले)', stageEn: 'Earthing-Up Stage (90–110 Days)',
+        detailHi: `शेष 1/3 यूरिया (${u3} kg) जड़ों के पास देकर मिट्टी चढ़ाएं। इसके बाद यूरिया न दें (चीनी रिकवरी घटती है)।`,
+        detailEn: `Apply final 1/3 Urea (${u3} kg) during earthing-up. Stop N after 120 days.`
+      }
+    ];
+  }
+
+  // 3. POTATO / ONION / GARLIC / TOMATO (Vegetables -> 50% Basal + 50% Earthing-Up)
+  if (['POTATO', 'ONION', 'GARLIC', 'TOMATO'].includes(code)) {
+    const uHalf = (ureaKg / 2).toFixed(1);
+    return [
+      {
+        stageHi: 'बुवाई / रोपाई के समय (Basal · Day 0)', stageEn: 'Planting / Transplanting (Day 0)',
+        detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + आधी यूरिया (${uHalf} kg)${znHi} क्यारी में मिलाएं।`,
+        detailEn: `Incorporate 100% ${phosSource} + MOP + 50% Urea (${uHalf} kg)${znEn} before planting.`
+      },
+      {
+        stageHi: 'पहली सिंचाई व मिट्टी चढ़ाना (25–30 दिन)', stageEn: 'Earthing-Up & Top-Dress (25–30 Days)',
+        detailHi: `शेष आधी यूरिया (${uHalf} kg) जड़ों से दूर डालकर मिट्टी चढ़ाएं। हर 8–12 दिन पर हल्की सिंचाई करें।`,
+        detailEn: `Side-dress remaining 50% Urea (${uHalf} kg) at earthing-up. Irrigate lightly every 8–12 days.`
+      },
+      {
+        stageHi: 'कंद / फल विकास अवस्था (50–60 दिन)', stageEn: 'Tuber / Bulb / Fruit Bulking (50–60 Days)',
+        detailHi: 'यूरिया बंद करें। चमकदार व बड़े कंद/फल के लिए पोटाश (0:0:50) का स्प्रे करें और जलभराव से बचाएं।',
+        detailEn: 'Stop Urea. Optional 0:0:50 foliar spray for size & quality; avoid waterlogging.'
+      }
+    ];
+  }
+
+  // 4. MUSTARD (Oilseed -> 50% Basal + 50% at 30-35d)
+  if (code === 'MUSTARD') {
+    const uHalf = (ureaKg / 2).toFixed(1);
+    return [
+      {
+        stageHi: 'बुवाई के समय (Basal · Day 0)', stageEn: 'Sowing · Basal (Day 0)',
+        detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + आधी यूरिया (${uHalf} kg) + सल्फर डालें।`,
+        detailEn: `Apply 100% ${phosSource} + MOP + 50% Urea (${uHalf} kg) + Sulphur at sowing.`
+      },
+      {
+        stageHi: 'पहली सिंचाई · शाखाएं निकलना (30–35 दिन)', stageEn: '1st Irrigation · Branching (30–35 Days)',
+        detailHi: `शेष आधी यूरिया (${uHalf} kg)${znHi} पहली सिंचाई के तुरंत बाद छिड़कें।`,
+        detailEn: `Top-dress remaining 50% Urea (${uHalf} kg)${znEn} right after 1st irrigation.`
+      },
+      {
+        stageHi: 'फली बनना (60–65 दिन · दूसरी सिंचाई)', stageEn: 'Siliqua / Pod Stage (60–65 Days)',
+        detailHi: 'हल्की सिंचाई करें (पाले से बचाव होगा)। माहू (चेपा) की निगरानी रखें।',
+        detailEn: 'Give 2nd light irrigation to protect against frost; monitor for aphids.'
+      }
+    ];
+  }
+
+  // 5. PADDY (Transplanted Kharif Cereal)
+  if (code === 'PADDY') {
+    const u3 = (ureaKg / 3).toFixed(1);
+    return [
+      {
+        stageHi: 'रोपाई / कद्दू के समय (Day 0)', stageEn: 'Puddling / Transplanting (Day 0)',
+        detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + 1/3 यूरिया (${u3} kg) आखिरी कद्दू पर मिलाएं।`,
+        detailEn: `Apply 100% ${phosSource} + MOP + 1/3 Urea (${u3} kg) at final puddling.`
+      },
+      {
+        stageHi: 'कल्ले फूटने की अवस्था (20–25 दिन)', stageEn: 'Active Tillering (20–25 Days)',
+        detailHi: `खेत का पानी निकालकर 1/3 यूरिया (${u3} kg)${znHi} डालें; 24 घंटे बाद पानी भरें।`,
+        detailEn: `Drain standing water, apply 1/3 Urea (${u3} kg)${znEn}, re-flood after 24 hrs.`
+      },
+      {
+        stageHi: 'बाली बनना / गभोट अवस्था (45–50 दिन)', stageEn: 'Panicle Initiation (45–50 Days)',
+        detailHi: `अंतिम 1/3 यूरिया (${u3} kg) डालें और फूल आने तक 2–3 सेमी पानी बनाए रखें।`,
+        detailEn: `Apply final 1/3 Urea (${u3} kg); maintain 2–3 cm moisture through flowering.`
+      }
+    ];
+  }
+
+  // 6. DEFAULT: WHEAT / BARLEY / MAIZE / COTTON / BAJRA (3-Split Cereal/Fibre)
+  const u3 = (ureaKg / 3).toFixed(1);
+  return [
+    {
+      stageHi: 'बुवाई के समय (Basal · Day 0)', stageEn: 'Basal Dose · Sowing (Day 0)',
+      detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + 1/3 यूरिया (${u3} kg)${varNote} के लिए ड्रिल करें।`,
+      detailEn: `Drill 100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP + 1/3 Urea (${u3} kg) at sowing.`
+    },
+    {
+      stageHi: 'पहला पानी · जड़ अवस्था / CRI (21–25 दिन)', stageEn: 'First Irrigation · CRI (21–25 Days)',
+      detailHi: `1/3 यूरिया (${u3} kg)${znHi} पहली सिंचाई के बाद ओट आने पर डालें।`,
+      detailEn: `Top-dress 1/3 Urea (${u3} kg)${znEn} after 1st irrigation.`
+    },
+    {
+      stageHi: 'दूसरा पानी · कल्ले फूटना (45–50 दिन)', stageEn: 'Second Irrigation · Tillering (45–50 Days)',
+      detailHi: `शेष 1/3 यूरिया (${u3} kg) डालें। बारिश की चेतावनी पर छिड़काव रोकें।`,
+      detailEn: `Broadcast remaining 1/3 Urea (${u3} kg). Hold if heavy rain forecast.`
+    }
+  ];
+}
+
 // DB-Driven ICAR Fertilizer Plan + Seed Variety Multiplier + 3-Stage Split Schedule
 export function computeFertilizerPlan(metrics, cropProfile, totalAcres, phosSource, fertilizerRates, varietySpec = null) {
   const m = metrics || {};
@@ -67,23 +202,7 @@ export function computeFertilizerPlan(metrics, cropProfile, totalAcres, phosSour
 
   const splitUrea = (ureaKg / 3).toFixed(1);
   const varNote = varietySpec ? ` (${varietySpec.nameHi})` : '';
-  const applicationTimeline = [
-    {
-      stageHi: 'बुवाई के समय (Basal · Day 0)', stageEn: 'Basal Dose · Sowing (Day 0)',
-      detailHi: `100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP (${mopKg.toFixed(1)} kg) + 1/3 यूरिया (${splitUrea} kg)${varNote} के लिए ड्रिल करें।`,
-      detailEn: `Drill 100% ${phosSource} (${phosKg.toFixed(1)} kg) + 100% MOP + 1/3 Urea (${splitUrea} kg) at sowing.`
-    },
-    {
-      stageHi: 'पहला पानी · जड़ अवस्था (21–25 दिन)', stageEn: 'First Irrigation (21–25 Days)',
-      detailHi: `1/3 यूरिया (${splitUrea} kg)${znKg > 0 ? ` + ${znKg.toFixed(1)} kg जिंक सल्फेट` : ''} सिंचाई के बाद डालें।`,
-      detailEn: `Top-dress 1/3 Urea (${splitUrea} kg)${znKg > 0 ? ` + ${znKg.toFixed(1)} kg Zinc` : ''} after 1st irrigation.`
-    },
-    {
-      stageHi: 'दूसरा पानी · कल्ले फूटना (45–50 दिन)', stageEn: 'Second Irrigation (45–50 Days)',
-      detailHi: `शेष 1/3 यूरिया (${splitUrea} kg) डालें। बारिश की चेतावनी पर छिड़काव रोकें।`,
-      detailEn: `Broadcast remaining 1/3 Urea (${splitUrea} kg). Hold if heavy rain forecast.`
-    }
-  ];
+  const applicationTimeline = buildCropApplicationTimeline(crop.code, phosSource, phosKg, mopKg, ureaKg, znKg, varNote);
 
   return {
     crop, variety: varietySpec,

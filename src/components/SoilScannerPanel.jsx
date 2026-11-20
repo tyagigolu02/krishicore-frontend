@@ -6,6 +6,8 @@ import { compressImage } from '../utils/imageCompressor';
 import { extractSoilCard } from '../api/krishicoreApi';
 import { Camera, RotateCcw, AlertTriangle, Loader2, ImageIcon, Sparkles, Layers, FlaskConical, CheckSquare, Square } from 'lucide-react';
 
+const MICRO_SHORT = { zinc: 'Zn · जिंक', iron: 'Fe · आयरन', boron: 'B · बोरॉन', copper: 'Cu · कॉपर', manganese: 'Mn · मैंगनीज' };
+
 export default function SoilScannerPanel() {
   const {
     lang, metrics, updateMetric, resetMetrics,
@@ -43,15 +45,15 @@ export default function SoilScannerPanel() {
   const microParams = PARAM_CONFIG.filter(p => p.group === 'MICRO');
 
   return (
-    <div className="lg:col-span-5 card-base space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-        <div>
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">M2 Vision AI · Verify Soil Report</span>
-          <h3 className="text-lg font-extrabold text-slate-900">{lang === 'HI' ? 'मृदा रिपोर्ट सत्यापन (12 तत्व)' : 'Verify Soil Report (12 Params)'}</h3>
+    <div className="lg:col-span-5 card-base space-y-4 overflow-hidden">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <div className="min-w-0">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 block">M2 Vision AI · Verify Soil</span>
+          <h3 className="text-base sm:text-lg font-extrabold text-slate-900 truncate">{lang === 'HI' ? 'मृदा रिपोर्ट सत्यापन (12 तत्व)' : 'Verify Soil Report (12)'}</h3>
         </div>
-        <label className="cursor-pointer px-3.5 py-2.5 rounded-xl bg-[#1B5E20] hover:bg-emerald-800 text-white text-xs font-extrabold flex items-center gap-1.5">
+        <label className="cursor-pointer px-3 py-2 rounded-xl bg-[#1B5E20] hover:bg-emerald-800 text-white text-xs font-extrabold flex items-center gap-1.5 whitespace-nowrap shrink-0">
           {scannerLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-amber-300" />}
-          <span>{lang === 'HI' ? 'कार्ड स्कैन करें' : 'Scan Card'}</span>
+          <span>{lang === 'HI' ? 'स्कैन करें' : 'Scan'}</span>
           <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleUpload} disabled={scannerLoading} />
         </label>
       </div>
@@ -70,19 +72,18 @@ export default function SoilScannerPanel() {
           <label className="text-xs font-extrabold text-slate-700">{lang === 'HI' ? 'लक्षित फसल चुनें:' : 'Select Crop:'}</label>
           <button onClick={resetMetrics} className="text-[11px] font-bold text-emerald-800 hover:underline flex items-center gap-1"><RotateCcw className="w-3 h-3" /> Reset</button>
         </div>
-        <select value={selectedCrop} onChange={e => setSelectedCrop(e.target.value)} className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#1B5E20] bg-emerald-50/40 font-extrabold text-sm text-slate-900">
+        <select value={selectedCrop} onChange={e => setSelectedCrop(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1B5E20] bg-emerald-50/40 font-extrabold text-sm text-slate-900">
           {cropProfiles.map(c => <option key={c.code} value={c.code}>{lang === 'HI' ? c.name : c.nameEn || c.name}</option>)}
         </select>
 
-        {/* Seed Variety Checkboxes */}
         <div className="p-3 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8] space-y-2">
-          <div className="text-[11px] font-extrabold text-[#1B5E20]">{lang === 'HI' ? '🌱 बीज की किस्म चुनें (Seed Variety — खाद मात्रा स्वतः समायोजित):' : '🌱 Select Seed Variety (Auto-adjusts NPK):'}</div>
+          <div className="text-[11px] font-extrabold text-[#1B5E20]">{lang === 'HI' ? '🌱 बीज की किस्म चुनें (खाद मात्रा स्वतः समायोजित):' : '🌱 Select Seed Variety (Auto-adjusts NPK):'}</div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             {varietiesForCrop.map(v => {
               const checked = selectedVarietyId === v.id;
               return (
-                <button key={v.id} type="button" onClick={() => setSelectedVarietyId(v.id)} className={`px-2.5 py-2 rounded-xl border text-left text-[11px] flex items-center justify-between gap-1 transition ${checked ? 'bg-[#E8F5E9] border-[#1B5E20] text-[#1B5E20] font-extrabold' : 'bg-white border-slate-200 text-slate-700 font-semibold'}`}>
-                  <span className="flex items-center gap-1.5 truncate">
+                <button key={v.id} type="button" onClick={() => setSelectedVarietyId(v.id)} className={`px-2.5 py-2 rounded-xl border text-left text-[11px] flex items-center justify-between gap-1.5 min-w-0 transition ${checked ? 'bg-[#E8F5E9] border-[#1B5E20] text-[#1B5E20] font-extrabold' : 'bg-white border-slate-200 text-slate-700 font-semibold'}`}>
+                  <span className="flex items-center gap-1.5 min-w-0">
                     {checked ? <CheckSquare className="w-3.5 h-3.5 shrink-0 text-[#1B5E20]" /> : <Square className="w-3.5 h-3.5 shrink-0 text-slate-400" />}
                     <span className="truncate">{lang === 'HI' ? v.nameHi : v.nameEn}</span>
                   </span>
@@ -94,19 +95,17 @@ export default function SoilScannerPanel() {
         </div>
       </div>
 
-      {/* Group 1: Physical */}
+      {/* Group 1: Physical (Vertical Stack inside 3 Columns -> ZERO Overflow!) */}
       <div className="space-y-1.5">
         <div className="text-[11px] font-extrabold text-slate-600 flex items-center gap-1"><Layers className="w-3.5 h-3.5 text-emerald-700" /> 1. {lang === 'HI' ? 'भौतिक गुण (pH, OC, EC)' : 'Physical (pH, OC, EC)'}</div>
         <div className="grid grid-cols-3 gap-2">
           {physicalParams.map(p => {
             const val = metrics[p.key], [st, cls] = p.check(val);
             return (
-              <div key={p.key} className="p-2 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8]">
-                <div className="text-[10px] font-bold text-slate-600 truncate">{lang === 'HI' ? p.label : p.labelEn}</div>
-                <div className="flex items-center justify-between mt-1">
-                  <input type="number" step="0.05" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-14 px-1.5 py-1 rounded-lg border bg-white font-extrabold text-xs tabular-nums" />
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold border ${cls}`}>{st}</span>
-                </div>
+              <div key={p.key} className="p-2 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8] flex flex-col gap-1.5 min-w-0">
+                <div className="text-[10px] font-extrabold text-slate-700 truncate">{lang === 'HI' ? p.label.split(' ')[0] + ' (' + p.key.toUpperCase().replace('ORGANICCARBON', 'OC') + ')' : p.labelEn}</div>
+                <input type="number" step="0.05" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-full px-2 py-1 rounded-lg border border-slate-300 bg-white font-extrabold text-xs text-center tabular-nums" />
+                <span className={`text-[9px] py-0.5 rounded-full font-extrabold border text-center truncate ${cls}`}>{st}</span>
               </div>
             );
           })}
@@ -120,27 +119,36 @@ export default function SoilScannerPanel() {
           {primaryParams.map(p => {
             const val = metrics[p.key], [st, cls] = p.check(val);
             return (
-              <div key={p.key} className="p-2 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8] space-y-1">
-                <div className="flex justify-between items-center"><span className="text-[11px] font-extrabold text-slate-800">{lang === 'HI' ? p.label : p.labelEn}</span><span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold border ${cls}`}>{st}</span></div>
-                <div className="flex justify-between items-center"><input type="number" step="1" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-16 px-2 py-1 rounded-lg border bg-white font-extrabold text-xs tabular-nums" /><span className="text-[10px] text-slate-500">Target: {p.target}</span></div>
+              <div key={p.key} className="p-2.5 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8] space-y-1.5 min-w-0">
+                <div className="flex justify-between items-center gap-1">
+                  <span className="text-[11px] font-extrabold text-slate-800 truncate">{lang === 'HI' ? p.label : p.labelEn}</span>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold border shrink-0 ${cls}`}>{st}</span>
+                </div>
+                <div className="flex items-center justify-between gap-1.5">
+                  <input type="number" step="1" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-16 sm:w-20 px-2 py-1 rounded-lg border border-slate-300 bg-white font-extrabold text-xs tabular-nums" />
+                  <span className="text-[10px] text-slate-500 text-right leading-tight">Target:<br/>{p.target}</span>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Group 3: Micro */}
-      <div className="grid grid-cols-5 gap-1.5">
-        {microParams.map(p => {
-          const val = metrics[p.key], [st, cls] = p.check(val);
-          return (
-            <div key={p.key} className="p-1.5 rounded-xl bg-[#F8FAF5] border border-[#E2E8D8] text-center">
-              <div className="text-[10px] font-bold text-slate-700">{p.key.toUpperCase()}</div>
-              <input type="number" step="0.05" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-full px-1 py-0.5 my-1 rounded border bg-white font-extrabold text-xs text-center tabular-nums" />
-              <span className={`block text-[8px] px-1 py-0.5 rounded font-extrabold ${cls}`}>{st}</span>
-            </div>
-          );
-        })}
+      {/* Group 3: Micro (3 Cols Mobile, 5 Cols Desktop -> ZERO Manganese Overflow!) */}
+      <div className="space-y-1.5">
+        <div className="text-[11px] font-extrabold text-slate-600">3. {lang === 'HI' ? 'सूक्ष्म तत्व (Micronutrients · ppm)' : 'Micronutrients (ppm)'}</div>
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+          {microParams.map(p => {
+            const val = metrics[p.key], [st, cls] = p.check(val);
+            return (
+              <div key={p.key} className="p-2 rounded-xl bg-[#F8FAF5] border border-[#E2E8D8] flex flex-col gap-1 text-center min-w-0">
+                <div className="text-[10px] font-extrabold text-slate-700 truncate">{lang === 'HI' ? (MICRO_SHORT[p.key] || p.key.toUpperCase()) : p.key.toUpperCase()}</div>
+                <input type="number" step="0.05" value={val} onChange={e => updateMetric(p.key, e.target.value)} className="w-full px-1 py-1 rounded-lg border border-slate-300 bg-white font-extrabold text-xs text-center tabular-nums" />
+                <span className={`text-[8px] px-1 py-0.5 rounded-full font-extrabold border truncate ${cls}`}>{st}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <button onClick={runAnalysis} disabled={isAnalyzing} className="w-full py-3 rounded-xl bg-[#1B5E20] hover:bg-emerald-900 text-white font-extrabold text-xs flex items-center justify-center gap-2">

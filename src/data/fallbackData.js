@@ -33,28 +33,28 @@ export const CROP_CATEGORIES = {
 
 export const DEFAULT_CROP_PROFILES = [
   // RABI (10 Crops)
-  { code: 'WHEAT', name: '🌾 गेहूं (Wheat — HD-3226 / DBW-187)', nameEn: '🌾 Wheat', n: 120, p: 60, k: 40, season: 'RABI', category: 'CEREAL', minPh: 6.0, maxPh: 8.3, idealMaxTemp: 26, maxSowingRainMm: 35, expectedYieldHi: '22–26 क्विंटल/एकड़', expectedYieldEn: '22–26 Qtl/Acre' },
-  { code: 'MUSTARD', name: '🌼 सरसों (Mustard — Pusa Bold / RH-725)', nameEn: '🌼 Mustard', n: 80, p: 40, k: 20, season: 'RABI', category: 'OILSEED', minPh: 6.0, maxPh: 8.4, idealMaxTemp: 27, maxSowingRainMm: 25, expectedYieldHi: '10–12 क्विंटल/एकड़', expectedYieldEn: '10–12 Qtl/Acre' },
-  { code: 'POTATO', name: '🥔 आलू (Potato — Kufri Bahar / Chipsona)', nameEn: '🥔 Potato', n: 150, p: 80, k: 100, season: 'RABI', category: 'VEGETABLE', minPh: 5.5, maxPh: 7.8, idealMaxTemp: 25, maxSowingRainMm: 30, expectedYieldHi: '110–140 क्विंटल/एकड़', expectedYieldEn: '110–140 Qtl/Acre' },
-  { code: 'CHICKPEA', name: '🌱 चना (Chickpea — Pusa-372 / JG-14)', nameEn: '🌱 Chickpea', n: 20, p: 50, k: 20, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 28, maxSowingRainMm: 25, expectedYieldHi: '8–11 क्विंटल/एकड़', expectedYieldEn: '8–11 Qtl/Acre' },
-  { code: 'PEA', name: '🟢 मटर (Field Pea — Azad P-3 / Arkel)', nameEn: '🟢 Field Pea', n: 25, p: 60, k: 30, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 24, maxSowingRainMm: 30, expectedYieldHi: '35–45 क्विंटल (हरी फली)', expectedYieldEn: '35–45 Qtl (Green Pod)' },
-  { code: 'LENTIL', name: '🫘 मसूर (Lentil — PL-8 / DPL-62)', nameEn: '🫘 Lentil', n: 20, p: 40, k: 20, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 26, maxSowingRainMm: 25, expectedYieldHi: '6–9 क्विंटल/एकड़', expectedYieldEn: '6–9 Qtl/Acre' },
-  { code: 'BARLEY', name: '🌾 जौ (Barley — RD-2794 / DWRB-137)', nameEn: '🌾 Barley', n: 60, p: 30, k: 20, season: 'RABI', category: 'CEREAL', minPh: 6.0, maxPh: 8.8, idealMaxTemp: 26, maxSowingRainMm: 30, expectedYieldHi: '18–22 क्विंटल/एकड़', expectedYieldEn: '18–22 Qtl/Acre' },
-  { code: 'ONION', name: '🧅 प्याज़ (Onion — Bhima Super / N-53)', nameEn: '🧅 Onion', n: 100, p: 50, k: 50, season: 'RABI', category: 'VEGETABLE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 28, maxSowingRainMm: 35, expectedYieldHi: '90–120 क्विंटल/एकड़', expectedYieldEn: '90–120 Qtl/Acre' },
-  { code: 'GARLIC', name: '🧄 लहसुन (Garlic — Yamuna Safed G-1)', nameEn: '🧄 Garlic', n: 100, p: 50, k: 50, season: 'RABI', category: 'VEGETABLE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 25, maxSowingRainMm: 30, expectedYieldHi: '40–55 क्विंटल/एकड़', expectedYieldEn: '40–55 Qtl/Acre' },
-  { code: 'BERSEEM', name: '🌿 बरसीम चारा (Berseem — Wardan / BL-42)', nameEn: '🌿 Berseem Fodder', n: 25, p: 60, k: 30, season: 'RABI', category: 'FODDER', minPh: 6.2, maxPh: 8.2, idealMaxTemp: 25, maxSowingRainMm: 40, expectedYieldHi: '300–380 क्विंटल हरा चारा', expectedYieldEn: '300–380 Qtl Fodder' },
+  { code: 'WHEAT', name: '🌾 गेहूं (HD-3226 / DBW-187)', nameEn: '🌾 Wheat', n: 120, p: 60, k: 40, season: 'RABI', category: 'CEREAL', minPh: 6.0, maxPh: 8.3, idealMaxTemp: 26, maxSowingRainMm: 35, expectedYieldHi: '22–26 क्विंटल/एकड़', expectedYieldEn: '22–26 Qtl/Acre' },
+  { code: 'MUSTARD', name: '🌼 सरसों (Pusa Bold / RH-725)', nameEn: '🌼 Mustard', n: 80, p: 40, k: 20, season: 'RABI', category: 'OILSEED', minPh: 6.0, maxPh: 8.4, idealMaxTemp: 27, maxSowingRainMm: 25, expectedYieldHi: '10–12 क्विंटल/एकड़', expectedYieldEn: '10–12 Qtl/Acre' },
+  { code: 'POTATO', name: '🥔 आलू (Kufri Bahar / Chipsona)', nameEn: '🥔 Potato', n: 150, p: 80, k: 100, season: 'RABI', category: 'VEGETABLE', minPh: 5.5, maxPh: 7.8, idealMaxTemp: 25, maxSowingRainMm: 30, expectedYieldHi: '110–140 क्विंटल/एकड़', expectedYieldEn: '110–140 Qtl/Acre' },
+  { code: 'CHICKPEA', name: '🌱 चना (Pusa-372 / JG-14)', nameEn: '🌱 Chickpea', n: 20, p: 50, k: 20, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 28, maxSowingRainMm: 25, expectedYieldHi: '8–11 क्विंटल/एकड़', expectedYieldEn: '8–11 Qtl/Acre' },
+  { code: 'PEA', name: '🟢 मटर (Azad P-3 / Arkel)', nameEn: '🟢 Field Pea', n: 25, p: 60, k: 30, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 24, maxSowingRainMm: 30, expectedYieldHi: '35–45 क्विंटल (हरी फली)', expectedYieldEn: '35–45 Qtl (Green Pod)' },
+  { code: 'LENTIL', name: '🫘 मसूर (PL-8 / DPL-62)', nameEn: '🫘 Lentil', n: 20, p: 40, k: 20, season: 'RABI', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 26, maxSowingRainMm: 25, expectedYieldHi: '6–9 क्विंटल/एकड़', expectedYieldEn: '6–9 Qtl/Acre' },
+  { code: 'BARLEY', name: '🌾 जौ (RD-2794 / DWRB-137)', nameEn: '🌾 Barley', n: 60, p: 30, k: 20, season: 'RABI', category: 'CEREAL', minPh: 6.0, maxPh: 8.8, idealMaxTemp: 26, maxSowingRainMm: 30, expectedYieldHi: '18–22 क्विंटल/एकड़', expectedYieldEn: '18–22 Qtl/Acre' },
+  { code: 'ONION', name: '🧅 प्याज़ (Bhima Super / N-53)', nameEn: '🧅 Onion', n: 100, p: 50, k: 50, season: 'RABI', category: 'VEGETABLE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 28, maxSowingRainMm: 35, expectedYieldHi: '90–120 क्विंटल/एकड़', expectedYieldEn: '90–120 Qtl/Acre' },
+  { code: 'GARLIC', name: '🧄 लहसुन (Yamuna Safed G-1)', nameEn: '🧄 Garlic', n: 100, p: 50, k: 50, season: 'RABI', category: 'VEGETABLE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 25, maxSowingRainMm: 30, expectedYieldHi: '40–55 क्विंटल/एकड़', expectedYieldEn: '40–55 Qtl/Acre' },
+  { code: 'BERSEEM', name: '🌿 बरसीम चारा (Wardan / BL-42)', nameEn: '🌿 Berseem Fodder', n: 25, p: 60, k: 30, season: 'RABI', category: 'FODDER', minPh: 6.2, maxPh: 8.2, idealMaxTemp: 25, maxSowingRainMm: 40, expectedYieldHi: '300–380 क्विंटल हरा चारा', expectedYieldEn: '300–380 Qtl Fodder' },
   // ALL_SEASON (3 Crops)
-  { code: 'SUGARCANE', name: '🎋 गन्ना (Sugarcane — Co-0238 / Co-0118)', nameEn: '🎋 Sugarcane', n: 150, p: 80, k: 60, season: 'ALL_SEASON', category: 'CASH', minPh: 6.0, maxPh: 8.3, idealMaxTemp: 35, maxSowingRainMm: 250, expectedYieldHi: '350–420 क्विंटल/एकड़', expectedYieldEn: '350–420 Qtl/Acre' },
-  { code: 'MAIZE', name: '🌽 मक्का (Maize — Hybrid HQPM-1)', nameEn: '🌽 Maize', n: 120, p: 60, k: 40, season: 'ALL_SEASON', category: 'CEREAL', minPh: 5.8, maxPh: 8.0, idealMaxTemp: 34, maxSowingRainMm: 150, expectedYieldHi: '22–28 क्विंटल/एकड़', expectedYieldEn: '22–28 Qtl/Acre' },
-  { code: 'TOMATO', name: '🍅 टमाटर (Tomato — Arka Rakshak)', nameEn: '🍅 Tomato', n: 120, p: 60, k: 60, season: 'ALL_SEASON', category: 'VEGETABLE', minPh: 5.8, maxPh: 7.6, idealMaxTemp: 30, maxSowingRainMm: 80, expectedYieldHi: '140–180 क्विंटल/एकड़', expectedYieldEn: '140–180 Qtl/Acre' },
+  { code: 'SUGARCANE', name: '🎋 गन्ना (Co-0238 / Co-0118)', nameEn: '🎋 Sugarcane', n: 150, p: 80, k: 60, season: 'ALL_SEASON', category: 'CASH', minPh: 6.0, maxPh: 8.3, idealMaxTemp: 35, maxSowingRainMm: 250, expectedYieldHi: '350–420 क्विंटल/एकड़', expectedYieldEn: '350–420 Qtl/Acre' },
+  { code: 'MAIZE', name: '🌽 मक्का (Hybrid HQPM-1)', nameEn: '🌽 Maize', n: 120, p: 60, k: 40, season: 'ALL_SEASON', category: 'CEREAL', minPh: 5.8, maxPh: 8.0, idealMaxTemp: 34, maxSowingRainMm: 150, expectedYieldHi: '22–28 क्विंटल/एकड़', expectedYieldEn: '22–28 Qtl/Acre' },
+  { code: 'TOMATO', name: '🍅 टमाटर (Arka Rakshak)', nameEn: '🍅 Tomato', n: 120, p: 60, k: 60, season: 'ALL_SEASON', category: 'VEGETABLE', minPh: 5.8, maxPh: 7.6, idealMaxTemp: 30, maxSowingRainMm: 80, expectedYieldHi: '140–180 क्विंटल/एकड़', expectedYieldEn: '140–180 Qtl/Acre' },
   // KHARIF & ZAID (7 Crops)
-  { code: 'PADDY', name: '🌾 धान (Paddy — Basmati-1509 / PR-126)', nameEn: '🌾 Paddy', n: 120, p: 60, k: 60, season: 'KHARIF', category: 'CEREAL', minPh: 5.5, maxPh: 8.2, idealMaxTemp: 36, maxSowingRainMm: 400, expectedYieldHi: '24–28 क्विंटल/एकड़', expectedYieldEn: '24–28 Qtl/Acre' },
-  { code: 'SOYBEAN', name: '🌿 सोयाबीन (Soybean — JS-9560)', nameEn: '🌿 Soybean', n: 25, p: 60, k: 40, season: 'KHARIF', category: 'PULSE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 35, maxSowingRainMm: 250, expectedYieldHi: '10–14 क्विंटल/एकड़', expectedYieldEn: '10–14 Qtl/Acre' },
-  { code: 'COTTON', name: '☁️ कपास (Cotton — Bt / Hybrid)', nameEn: '☁️ Cotton', n: 120, p: 60, k: 60, season: 'KHARIF', category: 'CASH', minPh: 6.0, maxPh: 8.5, idealMaxTemp: 38, maxSowingRainMm: 220, expectedYieldHi: '12–15 क्विंटल/एकड़', expectedYieldEn: '12–15 Qtl/Acre' },
-  { code: 'BAJRA', name: '🌾 बाजरा (Pearl Millet — HHB-67)', nameEn: '🌾 Pearl Millet', n: 80, p: 40, k: 20, season: 'KHARIF', category: 'CEREAL', minPh: 6.0, maxPh: 8.6, idealMaxTemp: 38, maxSowingRainMm: 160, expectedYieldHi: '12–16 क्विंटल/एकड़', expectedYieldEn: '12–16 Qtl/Acre' },
-  { code: 'GROUNDNUT', name: '🥜 मूंगफली (Groundnut — TG-37A)', nameEn: '🥜 Groundnut', n: 25, p: 50, k: 40, season: 'KHARIF', category: 'OILSEED', minPh: 5.8, maxPh: 7.6, idealMaxTemp: 35, maxSowingRainMm: 180, expectedYieldHi: '10–14 क्विंटल/एकड़', expectedYieldEn: '10–14 Qtl/Acre' },
-  { code: 'TUR_ARHAR', name: '🌱 तूर / अरहर (Pigeon Pea — Pusa-992)', nameEn: '🌱 Pigeon Pea', n: 25, p: 50, k: 25, season: 'KHARIF', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 36, maxSowingRainMm: 200, expectedYieldHi: '8–10 क्विंटल/एकड़', expectedYieldEn: '8–10 Qtl/Acre' },
-  { code: 'MOONG', name: '🌿 मूंग (Green Gram — SML-668)', nameEn: '🌿 Green Gram', n: 20, p: 40, k: 20, season: 'ZAID', category: 'PULSE', minPh: 6.2, maxPh: 8.0, idealMaxTemp: 38, maxSowingRainMm: 120, expectedYieldHi: '5–7 क्विंटल/एकड़', expectedYieldEn: '5–7 Qtl/Acre' }
+  { code: 'PADDY', name: '🌾 धान (Basmati-1509 / PR-126)', nameEn: '🌾 Paddy', n: 120, p: 60, k: 60, season: 'KHARIF', category: 'CEREAL', minPh: 5.5, maxPh: 8.2, idealMaxTemp: 36, maxSowingRainMm: 400, expectedYieldHi: '24–28 क्विंटल/एकड़', expectedYieldEn: '24–28 Qtl/Acre' },
+  { code: 'SOYBEAN', name: '🌿 सोयाबीन (JS-9560)', nameEn: '🌿 Soybean', n: 25, p: 60, k: 40, season: 'KHARIF', category: 'PULSE', minPh: 6.0, maxPh: 7.8, idealMaxTemp: 35, maxSowingRainMm: 250, expectedYieldHi: '10–14 क्विंटल/एकड़', expectedYieldEn: '10–14 Qtl/Acre' },
+  { code: 'COTTON', name: '☁️ कपास (Bt / Hybrid)', nameEn: '☁️ Cotton', n: 120, p: 60, k: 60, season: 'KHARIF', category: 'CASH', minPh: 6.0, maxPh: 8.5, idealMaxTemp: 38, maxSowingRainMm: 220, expectedYieldHi: '12–15 क्विंटल/एकड़', expectedYieldEn: '12–15 Qtl/Acre' },
+  { code: 'BAJRA', name: '🌾 बाजरा (HHB-67)', nameEn: '🌾 Pearl Millet', n: 80, p: 40, k: 20, season: 'KHARIF', category: 'CEREAL', minPh: 6.0, maxPh: 8.6, idealMaxTemp: 38, maxSowingRainMm: 160, expectedYieldHi: '12–16 क्विंटल/एकड़', expectedYieldEn: '12–16 Qtl/Acre' },
+  { code: 'GROUNDNUT', name: '🥜 मूंगफली (TG-37A)', nameEn: '🥜 Groundnut', n: 25, p: 50, k: 40, season: 'KHARIF', category: 'OILSEED', minPh: 5.8, maxPh: 7.6, idealMaxTemp: 35, maxSowingRainMm: 180, expectedYieldHi: '10–14 क्विंटल/एकड़', expectedYieldEn: '10–14 Qtl/Acre' },
+  { code: 'TUR_ARHAR', name: '🌱 तूर / अरहर (Pusa-992)', nameEn: '🌱 Pigeon Pea', n: 25, p: 50, k: 25, season: 'KHARIF', category: 'PULSE', minPh: 6.0, maxPh: 8.2, idealMaxTemp: 36, maxSowingRainMm: 200, expectedYieldHi: '8–10 क्विंटल/एकड़', expectedYieldEn: '8–10 Qtl/Acre' },
+  { code: 'MOONG', name: '🌿 मूंग (SML-668)', nameEn: '🌿 Green Gram', n: 20, p: 40, k: 20, season: 'ZAID', category: 'PULSE', minPh: 6.2, maxPh: 8.0, idealMaxTemp: 38, maxSowingRainMm: 120, expectedYieldHi: '5–7 क्विंटल/एकड़', expectedYieldEn: '5–7 Qtl/Acre' }
 ];
 
 export const DEFAULT_FERTILIZER_RATES = {
@@ -82,12 +82,12 @@ export const UNIT_NAMES_HI = { ACRE: 'एकड़', HECTARE: 'हेक्ट�
 export const UNIT_NAMES_EN = { ACRE: 'Acre', HECTARE: 'Hectare', KACCHA_BIGHA: 'Kaccha Bigha', PAKKA_BIGHA: 'Pakka Bigha', GUNTHA: 'Guntha', KANAL: 'Kanal', BISWA: 'Biswa', CENT: 'Cent' };
 
 export const AREA_UNIT_OPTIONS = [
-  { value: 'ACRE', label: 'एकड़ / किल्ला (43,560 sq.ft)', labelEn: 'Acre / Killa' },
-  { value: 'HECTARE', label: 'हेक्टेयर (2.471 एकड़)', labelEn: 'Hectare' },
-  { value: 'GUNTHA', label: 'गुंठा — MH/GJ/KA (40 = 1 एकड़)', labelEn: 'Guntha (MH/GJ/KA)' },
-  { value: 'KANAL', label: 'कनाल — PB/HR/JK (8 = 1 एकड़)', labelEn: 'Kanal (PB/HR)' },
-  { value: 'PAKKA_BIGHA', label: 'पक्का बीघा — UP/RJ/BR (1.6 = 1 एकड़)', labelEn: 'Pakka Bigha' },
-  { value: 'KACCHA_BIGHA', label: 'कच्चा बीघा — पश्चिमी UP (4.8 = 1 एकड़)', labelEn: 'Kaccha Bigha' },
-  { value: 'BISWA', label: 'बिस्वा (32 = 1 एकड़)', labelEn: 'Biswa' },
-  { value: 'CENT', label: 'सेंट — दक्षिण भारत (100 = 1 एकड़)', labelEn: 'Cent (South India)' }
+  { value: 'ACRE', label: 'एकड़ / किल्ला', labelEn: 'Acre / Killa' },
+  { value: 'HECTARE', label: 'हेक्टेयर (2.47 एकड़)', labelEn: 'Hectare (2.47 Ac)' },
+  { value: 'KACCHA_BIGHA', label: 'कच्चा बीघा (4.8 = 1 एकड़)', labelEn: 'Kaccha Bigha (4.8/Ac)' },
+  { value: 'PAKKA_BIGHA', label: 'पक्का बीघा (1.6 = 1 एकड़)', labelEn: 'Pakka Bigha (1.6/Ac)' },
+  { value: 'GUNTHA', label: 'गुंठा — MH/GJ (40/एकड़)', labelEn: 'Guntha (40/Ac)' },
+  { value: 'KANAL', label: 'कनाल — PB/HR (8/एकड़)', labelEn: 'Kanal (8/Ac)' },
+  { value: 'BISWA', label: 'बिस्वा (32 = 1 एकड़)', labelEn: 'Biswa (32/Ac)' },
+  { value: 'CENT', label: 'सेंट — South (100/एकड़)', labelEn: 'Cent (100/Ac)' }
 ];
