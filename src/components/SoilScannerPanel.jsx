@@ -48,7 +48,7 @@ export default function SoilScannerPanel() {
     <div className="lg:col-span-5 card-base space-y-4 overflow-hidden">
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
         <div className="min-w-0">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 block">M2 Vision AI · Verify Soil</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 block">Vision AI · Verify Soil</span>
           <h3 className="text-base sm:text-lg font-extrabold text-slate-900 truncate">{lang === 'HI' ? 'मृदा रिपोर्ट सत्यापन (12 तत्व)' : 'Verify Soil Report (12)'}</h3>
         </div>
         <label className="cursor-pointer px-3 py-2 rounded-xl bg-[#1B5E20] hover:bg-emerald-800 text-white text-xs font-extrabold flex items-center gap-1.5 whitespace-nowrap shrink-0">
@@ -87,7 +87,7 @@ export default function SoilScannerPanel() {
                     {checked ? <CheckSquare className="w-3.5 h-3.5 shrink-0 text-[#1B5E20]" /> : <Square className="w-3.5 h-3.5 shrink-0 text-slate-400" />}
                     <span className="truncate">{lang === 'HI' ? v.nameHi : v.nameEn}</span>
                   </span>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/80 border border-slate-200 shrink-0">{v.tagHi}</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/80 border border-slate-200 shrink-0">{lang === 'HI' ? v.tagHi : (v.tagEn || v.tagHi)}</span>
                 </button>
               );
             })}

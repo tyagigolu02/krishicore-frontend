@@ -326,3 +326,68 @@ export function generateWhatsAppShareUrl(plan, metrics, areaValue, areaUnit, uni
   const msg = `🌾 *KrishiCore रिपोर्ट*\n📍 ${weather?.location || 'भारत'}\n📐 ${areaValue} ${unitNamesHi[areaUnit] || areaUnit} (${acres} एकड़)\n🌱 ${plan.crop.name}${plan.variety ? ` (${plan.variety.nameHi})` : ''}\n• यूरिया: ${plan.ureaKg}kg (${plan.ureaBags} बोरी)\n• ${plan.phosFertName}: ${plan.phosKg}kg (${plan.phosBags} बोरी)\n• पोटाश: ${plan.mopKg}kg (${plan.mopBags} बोरी)\n💰 *कुल सरकारी MRP: ₹${plan.totalCost}*`;
   return `https://wa.me/?text=${encodeURIComponent(msg)}`;
 }
+
+// Dynamic Soil Alert Engine (Handles Deficiencies, Excess/Toxicity & Crop-Safe Application)
+export function computeSoilAlerts(metrics, plan, cropCode = 'WHEAT') {
+  const m = metrics || {};
+  const alerts = [];
+  const isPulse = ['CHICKPEA', 'PEA', 'LENTIL', 'MOONG', 'SOYBEAN', 'TUR_ARHAR', 'GROUNDNUT'].includes(String(cropCode).toUpperCase());
+
+  if (m.ph > 8.0) {
+    alerts.push({
+      type: 'DANGER',
+      hi: `क्षारीय मिट्टी (pH ${m.ph}): पोषक तत्व जकड़ जाते हैं — बुवाई से पहले ${plan.gypsumKg} kg जिप्सम मिलाएं।`,
+      en: `Alkaline Soil (pH ${m.ph}): Nutrient lockup risk — incorporate ${plan.gypsumKg} kg Gypsum pre-sowing.`
+    });
+  } else if (m.ph < 5.5) {
+    alerts.push({
+      type: 'DANGER',
+      hi: `अम्लीय मिट्टी (pH ${m.ph}): जड़ों का विकास रुक सकता है — कृषि चूना (Agricultural Lime) डालें।`,
+      en: `Acidic Soil (pH ${m.ph}): Root stress risk — apply Agricultural Lime pre-sowing.`
+    });
+  }
+
+  if (m.ec > 1.0) {
+    alerts.push({
+      type: 'DANGER',
+      hi: `उच्च लवणता (EC ${m.ec} dS/m): भारी सिंचाई से लवण धोएं और लवण-सहनशील फसल (जौ/सरसों) चुनें।`,
+      en: `High Salinity (EC ${m.ec} dS/m): Flush salts with heavy irrigation and prefer Barley/Mustard.`
+    });
+  }
+
+  if (m.zinc < 0.6) {
+    alerts.push({
+      type: 'WARN',
+      hi: isPulse
+        ? `जिंक की कमी (${m.zinc} ppm): ${plan.znKg} kg जिंक सल्फेट (21%) बुवाई के समय अलग से मिलाएं (DAP के साथ न मिलाएं)।`
+        : `जिंक की कमी (${m.zinc} ppm): पहली सिंचाई पर ${plan.znKg} kg जिंक सल्फेट (21%) यूरिया के साथ डालें (DAP के साथ कभी न मिलाएं)।`,
+      en: isPulse
+        ? `Zinc Deficient (${m.zinc} ppm): Apply ${plan.znKg} kg Zinc Sulphate separately at sowing (never mix with DAP).`
+        : `Zinc Deficient (${m.zinc} ppm): Apply ${plan.znKg} kg Zinc Sulphate with Urea at 1st irrigation (never mix with DAP).`
+    });
+  } else if (m.zinc > 5.0) {
+    alerts.push({
+      type: 'INFO',
+      hi: `जिंक की अधिकता (${m.zinc} ppm): मिट्टी में जिंक पहले से ज़्यादा है — अतिरिक्त जिंक बिल्कुल न खरीदें (वरना आयरन की कमी हो सकती है)।`,
+      en: `Excess Zinc (${m.zinc} ppm): Soil already has high Zinc — DO NOT apply extra Zinc (can lock out Iron).`
+    });
+  }
+
+  if (m.iron < 4.5) {
+    alerts.push({
+      type: 'WARN',
+      hi: `आयरन की कमी (${m.iron} ppm): नई पत्तियां पीली पड़ने पर 0.5% फेरस सल्फेट का स्प्रे करें।`,
+      en: `Low Iron (${m.iron} ppm): Spray 0.5% Ferrous Sulphate if new leaves turn yellow.`
+    });
+  }
+
+  if (m.boron < 0.5) {
+    alerts.push({
+      type: 'WARN',
+      hi: `बोरॉन की कमी (${m.boron} ppm): फूल व दाने भरते समय 0.2% बोरेक्स/सोल्यूबोर का छिड़काव करें।`,
+      en: `Low Boron (${m.boron} ppm): Spray 0.2% Borax/Solubor at flowering/grain-fill.`
+    });
+  }
+
+  return alerts;
+}

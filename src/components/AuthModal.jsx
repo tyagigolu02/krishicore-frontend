@@ -5,7 +5,7 @@ import { sendOtp, verifyOtp } from '../api/krishicoreApi';
 import { X, Phone, Shield, Loader2, AlertCircle, CheckCircle2, Sprout, BadgeCheck, Lock } from 'lucide-react';
 
 const ROLES = [
-  { id: 'FARMER', hi: '🌾 किसान (Farmer)', en: '🌾 Farmer', descHi: 'मिट्टी जांच व खाद सलाह', descEn: 'Soil test & advisory' },
+  { id: 'FARMER', hi: '🌾 किसान', en: '🌾 Farmer', descHi: 'मिट्टी जांच व खाद सलाह', descEn: 'Soil test & advisory' },
   { id: 'DISTRIBUTOR', hi: '🏪 खाद वितरक', en: '🏪 Distributor', descHi: 'दुकान स्टॉक अपडेट करें', descEn: 'Update shop bag stock' },
   { id: 'LAB_OPERATOR', hi: '🔬 मिट्टी लैब', en: '🔬 Soil Lab', descHi: 'किसान को रिपोर्ट भेजें', descEn: 'Push digital SHC report' },
   { id: 'GOVT_ADMIN', hi: '🏛️ कृषि अधिकारी', en: '🏛️ Govt Admin', descHi: 'सरकारी MRP व फसल नियम', descEn: 'Govt MRP & Crop Master' },

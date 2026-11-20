@@ -51,7 +51,7 @@ export default function MyFarmLedgerBar() {
           <div className="w-9 h-9 rounded-xl bg-[#E8F5E9] text-[#1B5E20] flex items-center justify-center"><BookOpen className="w-5 h-5" /></div>
           <div>
             <h3 className="text-sm font-extrabold text-slate-900">
-              {lang === 'HI' ? '📒 मेरा खेत और पिछली फसल खाता (Permanent Farm Ledger & Crop Rotation)' : '📒 My Farm Plots & Crop Rotation Ledger'}
+              {lang === 'HI' ? '📒 मेरा खेत और पिछली फसल खाता' : '📒 My Farm Plots & Crop Rotation Ledger'}
             </h3>
             <p className="text-[11px] text-slate-500">
               {user ? (lang === 'HI' ? 'आपका हर खेत और पिछले साल की बुवाई खाते में सुरक्षित है — क्लिक करते ही रकबा व फसल चक्र लोड होगा।' : 'Saved permanently to your account. Tap a plot to load rotation advice.')
@@ -63,7 +63,7 @@ export default function MyFarmLedgerBar() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Quick Previous Crop Selector (Works even for guests!) */}
           <select value={previousCropCode} onChange={e => setPreviousCropCode(e.target.value)} className="px-3 py-2 rounded-xl border border-slate-300 bg-[#F8FAF5] text-xs font-extrabold text-slate-800">
-            <option value="">{lang === 'HI' ? '🔄 पिछली फसल चुनें (Rotation)' : '🔄 Select Last Crop'}</option>
+            <option value="">{lang === 'HI' ? '🔄 पिछली फसल चुनें' : '🔄 Select Last Crop'}</option>
             {cropProfiles.map(c => <option key={c.code} value={c.code}>पिछली: {c.name.split('(')[0].trim()}</option>)}
           </select>
 
@@ -72,7 +72,7 @@ export default function MyFarmLedgerBar() {
           </button>
           {!user && (
             <button onClick={() => setShowAuthModal(true)} className="px-3 py-2 rounded-xl bg-amber-400 text-slate-950 text-xs font-extrabold">
-              🔒 DB में सेव करें
+              सेव करें
             </button>
           )}
         </div>
@@ -140,14 +140,14 @@ export default function MyFarmLedgerBar() {
               {AREA_UNIT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label.split('—')[0]}</option>)}
             </select>
             <select value={plotForm.soilType} onChange={e => setPlotForm({ ...plotForm, soilType: e.target.value })} className="input-field bg-white text-xs">
-              <option value="DOAMAT">दोमट मिट्टी (Loamy)</option><option value="KALI">काली मिट्टी (Black)</option><option value="BALUI">बलुई मिट्टी (Sandy)</option><option value="CHIKNI">चिकनी मिट्टी (Clay)</option>
+              <option value="DOAMAT">दोमट मिट्टी</option><option value="KALI">काली मिट्टी</option><option value="BALUI">बलुई मिट्टी</option><option value="CHIKNI">चिकनी मिट्टी</option>
             </select>
             <select value={plotForm.lastCropCode} onChange={e => setPlotForm({ ...plotForm, lastCropCode: e.target.value })} className="input-field bg-white text-xs">
               <option value="">पिछली फसल चुनें</option>
               {cropProfiles.map(c => <option key={c.code} value={c.code}>{c.name.split('(')[0].trim()}</option>)}
             </select>
           </div>
-          <button type="submit" className="btn-primary py-2 px-5">✅ खेत स्थायी सेव करें</button>
+          <button type="submit" className="btn-primary py-2 px-5">खेत स्थायी सेव करें</button>
         </form>
       )}
 
@@ -159,13 +159,13 @@ export default function MyFarmLedgerBar() {
             <button type="button" onClick={() => setShowLogHistory(false)}><X className="w-4 h-4" /></button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-            <select value={histForm.season} onChange={e => setHistForm({ ...histForm, season: e.target.value })} className="input-field bg-white text-xs"><option value="KHARIF">खरीफ (Kharif)</option><option value="RABI">रबी (Rabi)</option><option value="ZAID">जायद (Zaid)</option></select>
+            <select value={histForm.season} onChange={e => setHistForm({ ...histForm, season: e.target.value })} className="input-field bg-white text-xs"><option value="KHARIF">खरीफ</option><option value="RABI">रबी</option><option value="ZAID">जायद</option></select>
             <input type="number" value={histForm.cropYear} onChange={e => setHistForm({ ...histForm, cropYear: e.target.value })} placeholder="वर्ष (2026)" className="input-field bg-white text-xs" />
             <select value={histForm.cropCode} onChange={e => setHistForm({ ...histForm, cropCode: e.target.value })} className="input-field bg-white text-xs">
               {cropProfiles.map(c => <option key={c.code} value={c.code}>{c.name.split('(')[0].trim()}</option>)}
             </select>
             <input type="number" step="0.5" value={histForm.yieldQtlPerAcre} onChange={e => setHistForm({ ...histForm, yieldQtlPerAcre: e.target.value })} placeholder="उपज (क्विंटल/एकड़)" className="input-field bg-white text-xs" />
-            <button type="submit" className="btn-primary py-2">💾 रिकॉर्ड जोड़ें</button>
+            <button type="submit" className="btn-primary py-2">रिकॉर्ड जोड़ें</button>
           </div>
         </form>
       )}

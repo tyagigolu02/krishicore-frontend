@@ -41,10 +41,10 @@ export default function TabCalculator() {
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-1 text-center tabular-nums">
             {[
-              { l: 'एकड़ (Acre)', v: bd.acres },
-              { l: 'हेक्टेयर (Ha)', v: bd.hectares },
-              { l: 'गुंठा (MH/GJ)', v: bd.guntha },
-              { l: 'कनाल (PB/HR)', v: bd.kanal },
+              { l: 'एकड़', v: bd.acres },
+              { l: 'हेक्टेयर', v: bd.hectares },
+              { l: 'गुंठा', v: bd.guntha },
+              { l: 'कनाल', v: bd.kanal },
               { l: 'पक्का बीघा', v: bd.pakkaBigha },
               { l: 'कच्चा बीघा', v: bd.kacchaBigha },
             ].map((it, i) => (
@@ -62,8 +62,8 @@ export default function TabCalculator() {
             <input type="number" value={lwLength} onChange={e => setLwLength(parseFloat(e.target.value) || 0)} className="input-field bg-white text-xs" placeholder="Length" />
             <input type="number" value={lwWidth} onChange={e => setLwWidth(parseFloat(e.target.value) || 0)} className="input-field bg-white text-xs" placeholder="Width" />
             <select value={lwUnit} onChange={e => setLwUnit(e.target.value)} className="input-field bg-white text-xs">
-              <option value="FEET">फुट (Feet)</option>
-              <option value="METER">मीटर (Meter)</option>
+              <option value="FEET">फुट</option>
+              <option value="METER">मीटर</option>
               <option value="GATTA">गट्ठा (8.25 ft)</option>
             </select>
           </div>

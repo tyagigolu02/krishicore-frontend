@@ -30,7 +30,7 @@ export default function TabLabs() {
       {/* Radius Slider */}
       <div className="p-3.5 rounded-2xl bg-[#F8FAF5] border border-[#E2E8D8] space-y-1.5">
         <div className="flex justify-between text-xs font-extrabold">
-          <span>{lang === 'HI' ? 'खोज दायरा (Search Radius)' : 'Search Radius'}</span>
+          <span>{lang === 'HI' ? 'खोज दायरा' : 'Search Radius'}</span>
           <span className="text-[#1B5E20]">{radiusKm} km</span>
         </div>
         <input type="range" min="10" max="100" step="5" value={radiusKm} onChange={e => setRadiusKm(Number(e.target.value))} className="w-full accent-[#1B5E20]" />
@@ -69,7 +69,7 @@ export default function TabLabs() {
 
       <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-950 flex items-start gap-2">
         <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-700" />
-        <span><b>मिट्टी सैंपल टिप:</b> खेत के 5 कोनों से 'V' आकार में 6 इंच गहराई से मिट्टी मिलाकर ~500 ग्राम नमूना नज़दीकी लैब में दें।</span>
+        <span><b>मिट्टी सैंपल टिप:</b> खेत के 4 कोनों और एक बीच से 'V' आकार में 6 इंच गहराई से मिट्टी मिलाकर ~500 ग्राम नमूना नज़दीकी लैब में दें।</span>
       </div>
     </div>
   );

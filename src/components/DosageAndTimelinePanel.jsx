@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { CROP_CATEGORIES } from '../data/fallbackData';
-import { speakHindi, generateHindiSpeechText } from '../utils/calculations';
 import { Volume2, Store, CalendarClock, CheckCircle2, Award, AlertTriangle } from 'lucide-react';
+import { speakHindi, generateHindiSpeechText, computeSoilAlerts } from '../utils/calculations';
 
 export default function DosageAndTimelinePanel() {
   const {
@@ -20,6 +20,8 @@ export default function DosageAndTimelinePanel() {
     ? recommendedCrops
     : recommendedCrops.filter(c => c.category === catFilter)
   ).slice(0, 6);
+
+  const soilAlerts = computeSoilAlerts(metrics, plan, selectedCrop);
 
   const handleSpeak = () => {
     speakHindi(generateHindiSpeechText(plan, metrics, areaValue, areaUnit, unitNames, phosSource, totalAcres));
@@ -42,10 +44,23 @@ export default function DosageAndTimelinePanel() {
           </div>
         </div>
 
-        {metrics.zinc < 0.6 && (
-          <div className="p-3 rounded-2xl bg-amber-50 border border-amber-300 flex items-start gap-2 text-xs text-amber-950">
-            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <span><b>जिंक की कमी ({metrics.zinc} ppm):</b> पहली सिंचाई पर <b>{plan.znKg} kg जिंक सल्फेट (21%)</b> यूरिया के साथ अवश्य डालें।</span>
+        {soilAlerts.length > 0 && (
+          <div className="space-y-2">
+            {soilAlerts.map((al, idx) => (
+              <div
+                key={idx}
+                className={`p-3 rounded-2xl border flex items-start gap-2 text-xs font-semibold ${
+                  al.type === 'DANGER'
+                    ? 'bg-red-50 border-red-300 text-red-950'
+                    : al.type === 'INFO'
+                    ? 'bg-sky-50 border-sky-300 text-sky-950'
+                    : 'bg-amber-50 border-amber-300 text-amber-950'
+                }`}
+              >
+                <AlertTriangle className={`w-4 h-4 shrink-0 mt-0.5 ${al.type === 'DANGER' ? 'text-red-600' : al.type === 'INFO' ? 'text-sky-600' : 'text-amber-600'}`} />
+                <span>{lang === 'HI' ? al.hi : al.en}</span>
+              </div>
+            ))}
           </div>
         )}
 

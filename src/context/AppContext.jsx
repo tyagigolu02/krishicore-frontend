@@ -33,7 +33,6 @@ export function AppProvider({ children }) {
   const [shops, setShops] = useState(() => loadLocal(KEYS.SHOPS, []));
   const [labs, setLabs] = useState(() => loadLocal(KEYS.LABS, []));
 
-  // Permanent Farm Plot & Crop Rotation State
   const [farms, setFarms] = useState(() => loadLocal(KEYS.FARMS, []));
   const [activePlotId, setActivePlotId] = useState(null);
   const [previousCropCode, setPreviousCropCode] = useState('');
@@ -64,7 +63,6 @@ export function AppProvider({ children }) {
   const plan = computeFertilizerPlan(metrics, currentCrop, totalAcres, phosSource, fertilizerRates, currentVariety);
   const remedies = computeRemedies(metrics, totalAcres, phosSource, plan);
 
-  // Load farmer's permanent PostgreSQL farm plots on login
   useEffect(() => {
     if (!user || !isLiveBackend) return;
     fetchMyFarms().then(list => {

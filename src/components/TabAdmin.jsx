@@ -38,7 +38,7 @@ export default function TabAdmin() {
   const autoGps = async (pinCode, dist, setter) => {
     const g = await geocodeByPincodeOrDistrict(pinCode, dist);
     if (g) { setter(p => ({ ...p, lat: g.lat, lng: g.lng })); notify(`📍 GPS Set: ${g.lat.toFixed(3)}, ${g.lng.toFixed(3)}`); }
-    else notify('⚠️ पिनकोड या ज़िला नाम सही लिखें');
+    else notify('पिनकोड या ज़िला नाम सही लिखें');
   };
 
   if (!isRoleAuthorized && !pinUnlocked) {
@@ -46,7 +46,7 @@ export default function TabAdmin() {
       <div className="max-w-md mx-auto card-base text-center space-y-4 my-6">
         <div className="w-12 h-12 rounded-2xl bg-[#1B5E20] text-amber-300 flex items-center justify-center mx-auto"><Lock className="w-6 h-6" /></div>
         <h2 className="text-lg font-extrabold text-slate-900">{lang === 'HI' ? 'रोल-आधारित प्रबंधन पोर्टल' : 'Role-Based Management Portal'}</h2>
-        <p className="text-xs text-slate-500">{lang === 'HI' ? 'खाद वितरक (Stock Update), मिट्टी लैब (Report Push) या कृषि अधिकारी के रूप में लॉगिन करें अथवा एडमिन पिन (2026) डालें।' : 'Login as Distributor, Soil Lab, or Officer, or enter Admin PIN (2026).'}</p>
+        <p className="text-xs text-slate-500">{lang === 'HI' ? 'खाद वितरक, मिट्टी लैब या कृषि अधिकारी के रूप में लॉगिन करें अथवा एडमिन पिन डालें।' : 'Login as Distributor, Soil Lab, or Officer, or enter Admin PIN.'}</p>
         <button onClick={() => setShowAuthModal(true)} className="w-full py-3 rounded-xl bg-amber-400 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1.5">
           <UserCheck className="w-4 h-4" /> {lang === 'HI' ? 'खाद वितरक / लैब / अधिकारी OTP लॉगिन' : 'Distributor / Lab / Officer Login'}
         </button>
@@ -64,9 +64,9 @@ export default function TabAdmin() {
     <div className="space-y-5">
       <div className="card-base bg-gradient-to-r from-[#061a11] to-[#1B5E20] text-white flex flex-wrap items-center justify-between gap-3">
         <div>
-          <span className="text-[11px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300">
+          <span className="text-[11px] font-extrabold uppercase px-3 py-1.5 rounded-full bg-amber-400/20 text-amber-300">
             <ShieldCheck className="w-3.5 h-3.5 inline mr-1" />
-            {isFullAdmin ? 'GOVT ADMIN (Full Control)' : userRole === 'DISTRIBUTOR' ? `DISTRIBUTOR (${user?.orgName})` : `SOIL LAB (${user?.orgName})`}
+            {isFullAdmin ? 'ADMIN' : userRole === 'DISTRIBUTOR' ? `DISTRIBUTOR (${user?.orgName})` : `SOIL LAB (${user?.orgName})`}
           </span>
           <h2 className="text-xl font-extrabold mt-1">{lang === 'HI' ? '⚙️ लाइव डेटा एवं स्टॉक नियंत्रण केंद्र' : '⚙️ Live Data & Stock Command Center'}</h2>
         </div>
@@ -101,7 +101,7 @@ export default function TabAdmin() {
                   <input type="number" step="0.5" value={ed.mrpBag} onChange={e => setRateEdits({ ...rateEdits, [code]: { ...ed, mrpBag: parseFloat(e.target.value) || 0 } })} className="input-field bg-white text-xs" placeholder="MRP ₹" />
                   <input type="number" value={ed.bagKg} onChange={e => setRateEdits({ ...rateEdits, [code]: { ...ed, bagKg: parseFloat(e.target.value) || 50 } })} className="input-field bg-white text-xs" placeholder="Bag KG" />
                 </div>
-                <button onClick={() => { saveFertilizerRateAdmin(code, ed); notify(`✅ ${code} का सरकारी MRP ₹${ed.mrpBag} अपडेट हो गया!`); }} className="btn-primary w-full py-2 flex items-center justify-center gap-1"><Save className="w-3.5 h-3.5" /> Save Govt MRP</button>
+                <button onClick={() => { saveFertilizerRateAdmin(code, ed); notify(`${code} का सरकारी MRP ₹${ed.mrpBag} अपडेट हो गया!`); }} className="btn-primary w-full py-2 flex items-center justify-center gap-1"><Save className="w-3.5 h-3.5" /> Save Govt MRP</button>
               </div>
             );
           })}
@@ -111,7 +111,7 @@ export default function TabAdmin() {
       {/* 2. CROP MASTER */}
       {sec === 'crops' && isFullAdmin && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <form onSubmit={e => { e.preventDefault(); saveCropAdmin(newCrop); notify(`✅ फसल ${newCrop.name} सेव हो गई!`); setNewCrop({ ...newCrop, code: '', name: '' }); }} className="lg:col-span-5 card-base space-y-2.5">
+          <form onSubmit={e => { e.preventDefault(); saveCropAdmin(newCrop); notify(`फसल ${newCrop.name} सेव हो गई!`); setNewCrop({ ...newCrop, code: '', name: '' }); }} className="lg:col-span-5 card-base space-y-2.5">
             <h3 className="text-sm font-extrabold">🌱 नई फसल व मौसम नियम जोड़ें</h3>
             <div className="grid grid-cols-2 gap-2">
               <input required value={newCrop.code} onChange={e => setNewCrop({ ...newCrop, code: e.target.value.toUpperCase() })} placeholder="CODE (e.g. BAJRA)" className="input-field text-xs" />
@@ -123,7 +123,7 @@ export default function TabAdmin() {
               <input type="number" value={newCrop.p} onChange={e => setNewCrop({ ...newCrop, p: e.target.value })} placeholder="P kg/ha" className="input-field text-xs" />
               <input type="number" value={newCrop.k} onChange={e => setNewCrop({ ...newCrop, k: e.target.value })} placeholder="K kg/ha" className="input-field text-xs" />
             </div>
-            <button type="submit" className="btn-primary w-full py-2.5">➕ फसल जोड़ें</button>
+            <button type="submit" className="btn-primary w-full py-2.5">फसल जोड़ें</button>
           </form>
           <div className="lg:col-span-7 card-base space-y-2 max-h-96 overflow-y-auto">
             {cropProfiles.map(c => (
@@ -139,8 +139,8 @@ export default function TabAdmin() {
       {/* 3. DISTRIBUTOR SHOP & LIVE BAG STOCK MANAGER */}
       {sec === 'shops' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <form onSubmit={e => { e.preventDefault(); saveShopAdmin(newShop); notify(`✅ दुकान "${newShop.shopName}" व स्टॉक लाइव अपडेट हो गया!`); }} className="lg:col-span-5 card-base space-y-2.5">
-            <h3 className="text-sm font-extrabold">🏪 खाद केंद्र पंजीकरण व बोरी स्टॉक अपडेट</h3>
+          <form onSubmit={e => { e.preventDefault(); saveShopAdmin(newShop); notify(`दुकान "${newShop.shopName}" व स्टॉक लाइव अपडेट हो गया!`); }} className="lg:col-span-5 card-base space-y-2.5">
+            <h3 className="text-sm font-extrabold">खाद केंद्र पंजीकरण व बोरी स्टॉक अपडेट</h3>
             <input required value={newShop.shopName} onChange={e => setNewShop({ ...newShop, shopName: e.target.value })} placeholder="दुकान का नाम *" className="input-field text-xs" />
             <div className="grid grid-cols-3 gap-2">
               <input value={newShop.district} onChange={e => setNewShop({ ...newShop, district: e.target.value })} placeholder="ज़िला *" className="input-field text-xs" />
@@ -153,7 +153,7 @@ export default function TabAdmin() {
               <div><label className="text-[10px] font-bold">DAP बोरी</label><input type="number" value={newShop.dapBagsAvailable} onChange={e => setNewShop({ ...newShop, dapBagsAvailable: e.target.value })} className="input-field text-xs" /></div>
               <div><label className="text-[10px] font-bold">MOP बोरी</label><input type="number" value={newShop.mopBagsAvailable} onChange={e => setNewShop({ ...newShop, mopBagsAvailable: e.target.value })} className="input-field text-xs" /></div>
             </div>
-            <button type="submit" className="btn-primary w-full py-2.5">➕ स्टॉक पब्लिश करें (Govt MRP Locked)</button>
+            <button type="submit" className="btn-primary w-full py-2.5">स्टॉक पब्लिश करें (Govt MRP Locked)</button>
           </form>
           <div className="lg:col-span-7 card-base space-y-2 max-h-96 overflow-y-auto">
             {shops.map((s, i) => (
@@ -176,16 +176,16 @@ export default function TabAdmin() {
       {/* 4. SOIL LAB REGISTRATION & FARMER DIGITAL SHC PUSH */}
       {sec === 'labs' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <form onSubmit={e => { e.preventDefault(); saveLabAdmin(newLab); notify(`✅ लैब "${newLab.labName}" सेव हो गई!`); }} className="lg:col-span-5 card-base space-y-2.5">
+          <form onSubmit={e => { e.preventDefault(); saveLabAdmin(newLab); notify(`लैब "${newLab.labName}" सेव हो गई!`); }} className="lg:col-span-5 card-base space-y-2.5">
             <h3 className="text-sm font-extrabold">🔬 नई मिट्टी जांच लैब पंजीकृत करें</h3>
             <input required value={newLab.labName} onChange={e => setNewLab({ ...newLab, labName: e.target.value })} placeholder="लैब का नाम *" className="input-field text-xs" />
             <div className="grid grid-cols-3 gap-2">
               <input value={newLab.district} onChange={e => setNewLab({ ...newLab, district: e.target.value })} placeholder="ज़िला *" className="input-field text-xs" />
               <input value={newLab.pincode} onChange={e => setNewLab({ ...newLab, pincode: e.target.value })} placeholder="पिनकोड *" className="input-field text-xs" />
-              <button type="button" onClick={() => autoGps(newLab.pincode, newLab.district, setNewLab)} className="btn-amber text-[11px]">📍 GPS</button>
+              <button type="button" onClick={() => autoGps(newLab.pincode, newLab.district, setNewLab)} className="btn-amber text-[11px]">GPS</button>
             </div>
             <input required value={newLab.address} onChange={e => setNewLab({ ...newLab, address: e.target.value })} placeholder="पूरा पता *" className="input-field text-xs" />
-            <button type="submit" className="btn-primary w-full py-2.5">➕ लैब जोड़ें</button>
+            <button type="submit" className="btn-primary w-full py-2.5">लैब जोड़ें</button>
           </form>
 
           <form onSubmit={e => { e.preventDefault(); adminPushReportToFarmer(pushData).catch(() => {}); setMetrics({ ph: +pushData.ph, ec: +pushData.ec, organicCarbon: +pushData.organicCarbon, nitrogen: +pushData.nitrogen, phosphorus: +pushData.phosphorus, potassium: +pushData.potassium, sulphur: +pushData.sulphur, zinc: +pushData.zinc, iron: +pushData.iron, copper: +pushData.copper, manganese: +pushData.manganese, boron: +pushData.boron }); notify('✅ किसान के डैशबोर्ड पर 12-तत्वों की रिपोर्ट पुश हो गई!'); setActiveTab('workspace'); }} className="lg:col-span-7 card-base space-y-2.5">
@@ -196,7 +196,7 @@ export default function TabAdmin() {
                 <div key={k} className="p-1.5 rounded-lg bg-slate-50 border"><label className="text-[9px] font-bold uppercase text-slate-500 block">{k}</label><input type="number" step="0.05" value={pushData[k]} onChange={e => setPushData({ ...pushData, [k]: e.target.value })} className="w-full font-extrabold text-xs bg-transparent" /></div>
               ))}
             </div>
-            <button type="submit" className="btn-primary w-full py-2.5">📤 रिपोर्ट किसान को भेजें व सलाह अपडेट करें</button>
+            <button type="submit" className="btn-primary w-full py-2.5">रिपोर्ट किसान को भेजें व सलाह अपडेट करें</button>
           </form>
         </div>
       )}
