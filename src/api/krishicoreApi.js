@@ -140,7 +140,7 @@ export async function fetchLive16DayWeather(lat, lng, labelHi = 'आपका �
 }
 
 // 2. Strict Agricultural POI Discovery (Blocks Beer/Wine/Apartments/Schools/Agroha!)
-const VALID_SHOP_RE = /\b(agro|fertilizer|fertilizers|khad|beej|seed|seeds|iffco|kribhco|pacs|krishi|kisan seva|pesticide|pesticides|mandi|sahakari|coop|nursery)\b/i;
+const VALID_SHOP_RE = /\b(beej|bhandar|seed|seeds|khad|fertilizer|fertiliser|agro|agri|krishi|kisan|iffco|kribhco|pacs|pesticide|mandi|nursery|seva kendra)\b/i;
 const BLOCKED_SHOP_RE = /\b(beer|wine|liquor|alcohol|theka|bar|pub|club|apartment|apartments|residency|enclave|society|agroha|school|college|vidyalaya|academy|hospital|clinic|medical|pharmacy|hotel|dhaba|restaurant|cafe|bank|atm|petrol|pump|mandir|masjid|temple|church|gurudwara|cinema|mall|salon|gym|colony|vihar|park|station)\b/i;
 const BLOCKED_OSM_VALS = new Set(['alcohol', 'beverages', 'wine', 'pub', 'bar', 'apartments', 'residential', 'school', 'college', 'hospital', 'restaurant', 'hotel', 'bank', 'fuel', 'place_of_worship']);
 
@@ -149,9 +149,15 @@ const BLOCKED_LAB_RE = /\b(beer|wine|liquor|bar|apartment|apartments|inter colle
 
 export async function fetchLivePanIndiaPois(lat, lng, regionName = '') {
   if (!lat || !lng) return { shops: [], labs: [] };
-  const ck = `${CACHE_PREFIX}pois_v7_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  const ck = `${CACHE_PREFIX}pois_v8_${lat.toFixed(2)}_${lng.toFixed(2)}`;
   const district = regionName.split(',')[0].trim() || 'India';
-  const MAX_SHOP_KM = 25;
+  const MAX_SHOP_KM = 50;
+  const shopBbox = `${(lng - 0.50).toFixed(4)},${(lat - 0.45).toFixed(4)},${(lng + 0.50).toFixed(4)},${(lat + 0.45).toFixed(4)}`;
+
+  const shopTerms = ['Beej', 'Krishi', 'Fertilizer', 'Agro'];
+  const shopFeatures = shopsMap.size < 2
+    ? await Promise.all(shopTerms.map(t => queryPhoton(t, shopBbox)))
+    : [];
   const MAX_LAB_KM = 45;
 
   const [dbLabs, dbShops] = await Promise.all([
@@ -189,8 +195,14 @@ export async function fetchLivePanIndiaPois(lat, lng, regionName = '') {
       const [elLng, elLat] = c;
       if (computeHaversineKm(lat, lng, elLat, elLng) > MAX_SHOP_KM) return;
 
+      const distKm = computeHaversineKm(lat, lng, elLat, elLng);
+      if (distKm > MAX_SHOP_KM) return;
+
       shopsMap.set(name, {
-        id: `ph_s_${p.osm_id || idx}`, shopName: name, shopNameEn: name,
+        id: `ph_s_${p.osm_id || idx}`,
+        shopName: name,
+        shopNameEn: name,
+        distanceKm: distKm,
         shopType: /iffco|kribhco|pacs|coop|sahakari|mandi|govt/i.test(name) ? 'GOVT_COOP' : 'PRIVATE',
         district: p.county || p.city || district,
         address: [p.street, p.city, p.state].filter(Boolean).join(', ') || district,
@@ -207,12 +219,22 @@ export async function fetchLivePanIndiaPois(lat, lng, regionName = '') {
       const [elLng, elLat] = c;
       if (computeHaversineKm(lat, lng, elLat, elLng) > MAX_LAB_KM) return;
 
-      labsMap.set(name, {
-        id: `ph_l_${p.osm_id || idx}`, labName: name, labNameEn: name,
-        district: p.county || p.city || district,
-        address: [p.street, p.city, p.state].filter(Boolean).join(', ') || district,
-        contactNumber: '18001801551', isGovernmentLab: !/private/i.test(name), lat: elLat, lng: elLng,
-      });
+      const distKm = computeHaversineKm(lat, lng, elLat, elLng);
+      if (distKm > MAX_LAB_KM) return;
+
+        labsMap.set(name, {
+          id: `ph_l_${p.osm_id || idx}`,
+          labName: name,
+          labNameEn: name,
+          distanceKm: distKm, // <-- YE MISSING THA
+          district: p.county || p.city || district,
+          address: [p.street, p.city, p.state].filter(Boolean).join(', ') || district,
+          contactNumber: '18001801551',
+          isGovernmentLab: !/private/i.test(name),
+          lat: elLat,
+          lng: elLng,
+        }
+      );
     });
   }
 

@@ -50,6 +50,14 @@ export default function TabShops() {
   ];
 
   const locLabel = lang === 'HI' ? weatherData?.location || 'आपके क्षेत्र' : weatherData?.locationEn || 'your area';
+  const mapLat = weatherData?.lat ?? weatherData?.latitude;
+  const mapLng = weatherData?.lng ?? weatherData?.longitude;
+  const googleMapsUrl =
+    mapLat && mapLng
+      ? `https://www.google.com/maps/search/beej+bhandar+fertilizer+shop/@${mapLat},${mapLng},13z`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          `beej bhandar fertilizer shop near ${weatherData?.locationEn || weatherData?.location || 'India'}`
+        )}`;
 
   return (
     <div className="card-base space-y-5">
@@ -180,7 +188,7 @@ export default function TabShops() {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href={`https://www.google.com/maps/search/fertilizer+khad+beej+bhandar+IFFCO+near+${encodeURIComponent(locLabel)}`}
+            href={googleMapsUrl}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1B5E20] hover:bg-emerald-800 text-white font-extrabold text-xs shadow-sm"
           >
             <MapPin className="w-4 h-4 text-amber-300" />

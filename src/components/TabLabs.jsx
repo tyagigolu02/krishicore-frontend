@@ -6,9 +6,15 @@ export default function TabLabs() {
   const { lang, labs, radiusKm, setRadiusKm, userCoords, weatherData } = useApp();
   const visibleLabs = (labs || []).filter(l => (l.distanceKm ?? 0) <= radiusKm);
   const locName = weatherData?.location || 'आपके क्षेत्र';
-  const gMapsLabsUrl = userCoords
-    ? `https://www.google.com/maps/search/soil+testing+laboratory+KVK+krishi/@${userCoords.lat},${userCoords.lng},12z`
-    : `https://www.google.com/maps/search/soil+testing+lab+${encodeURIComponent(locName)}`;
+
+  const mapLat = userCoords?.lat ?? weatherData?.lat ?? weatherData?.latitude;
+  const mapLng = userCoords?.lng ?? weatherData?.lng ?? weatherData?.longitude;
+  const googleMapsLabsUrl =
+    mapLat && mapLng
+      ? `https://www.google.com/maps/search/soil+testing+lab+krishi+vigyan+kendra/@${mapLat},${mapLng},12z`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          `soil testing lab krishi vigyan kendra near ${weatherData?.locationEn || weatherData?.location || 'India'}`
+        )}`;
 
   return (
     <div className="card-base space-y-5">
@@ -21,7 +27,7 @@ export default function TabLabs() {
           <p className="text-xs text-slate-500 mt-1">📍 {locName} से {radiusKm} km के दायरे में ({visibleLabs.length} लैब्स)</p>
         </div>
 
-        <a href={gMapsLabsUrl} target="_blank" rel="noopener noreferrer" className="btn-amber flex items-center gap-1.5 whitespace-nowrap">
+        <a href={googleMapsLabsUrl} target="_blank" rel="noopener noreferrer" className="btn-amber flex items-center gap-1.5 whitespace-nowrap">
           <ExternalLink className="w-4 h-4" />
           {lang === 'HI' ? '🗺️ Google Maps पर सभी नज़दीकी लैब्स देखें' : '🗺️ View All Nearby Labs on Google Maps'}
         </a>
@@ -54,7 +60,7 @@ export default function TabLabs() {
                 </div>
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
                   <a href={`tel:${l.contactNumber || '18001801551'}`} className="py-2 rounded-xl bg-[#1B5E20] text-white font-bold text-xs flex items-center justify-center gap-1"><Phone className="w-3.5 h-3.5" /> कॉल करें</a>
-                  <a target="_blank" rel="noopener noreferrer" href={`https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}`} className="py-2 rounded-xl bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1"><MapPin className="w-3.5 h-3.5" /> रास्ता देखें</a>
+                  <a target="_blank" rel="noopener noreferrer" href={destLat && destLng ? `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}` : googleMapsLabsUrl} className="py-2 rounded-xl bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1"><MapPin className="w-3.5 h-3.5" /> रास्ता देखें</a>
                 </div>
               </div>
             );
@@ -64,6 +70,10 @@ export default function TabLabs() {
         <div className="p-8 rounded-2xl bg-slate-50 border text-center space-y-3">
           <Microscope className="w-10 h-10 text-slate-300 mx-auto" />
           <p className="text-sm font-bold text-slate-600">{lang === 'HI' ? `${radiusKm} km के अंदर कोई पंजीकृत लैब नहीं मिली। दायरा बढ़ाएं या Google Maps पर देखें।` : 'No labs in radius. Increase radius or check Google Maps.'}</p>
+          <a href={googleMapsLabsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1B5E20] hover:bg-[#144718] text-white text-xs font-bold transition">
+            <ExternalLink className="w-3.5 h-3.5" />
+            {lang === 'HI' ? 'Google Maps पर नज़दीकी लैब्स खोजें' : 'Find Nearby Labs on Google Maps'}
+          </a>
         </div>
       )}
 
