@@ -1,5 +1,5 @@
 // src/api/krishicoreApi.js
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || '/api/v1').replace(/\/+$/, '');
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 const CACHE_PREFIX = 'krishicore_pwa_cache_';
 
 function getAuthHeaders(isMultipart = false) {
@@ -7,7 +7,8 @@ function getAuthHeaders(isMultipart = false) {
   const token = localStorage.getItem('krishicore_token');
   if (token && !token.startsWith('demo_token_')) {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
       if (payload.exp && payload.exp * 1000 > Date.now()) {
         headers['Authorization'] = `Bearer ${token}`;
       } else {
