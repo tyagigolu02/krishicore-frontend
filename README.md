@@ -10,7 +10,7 @@
 [![Open-Meteo](https://img.shields.io/badge/Weather-Open--Meteo_16--Day-2E7D32?style=for-the-badge)](https://open-meteo.com/)
 [![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](#deployment-github-pages)
 
-[🚀 Live Demo](https://tyagigolu02.github.io/krishicore-frontend/) · [⚙️ Spring Boot Backend](https://github.com/tyagigolu02/krishicore-backend) · [🐛 Report Bug](https://github.com/tyagigolu02/krishicore-frontend/issues)
+[🚀 Live Demo](https://tyagigolu02.github.io/krishicore/) · [⚙️ Spring Boot Backend](https://github.com/tyagigolu02/krishicore-backend) · [🐛 Report Bug](https://github.com/tyagigolu02/krishicore/issues)
 
 </div>
 
@@ -61,19 +61,19 @@ Most agricultural apps fail Indian farmers in the field because they hardcode re
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    KrishiCore React + Vite PWA                          │
-│  ┌──────────────┐  ┌───────────────────┐  ┌──────────────────────────┐  │
-│  │ Geo & Weather│  │ 8-Factor ICAR &   │  │ Farm Ledger & Offline    │  │
-│  │ Auto-Sync    │  │ Variety Engine    │  │ Cache (localStorage)     │  │
-│  └──────┬───────┘  └─────────┬─────────┘  └────────────┬─────────────┘  │
+│                         KrishiCore React + Vite PWA                                  │
+│  ┌──────────────┐  ┌───────────────────┐  ┌──────────────────────────┐   │
+│  │ Geo & Weather.  │  │ 8-Factor ICAR &      │  │ Farm Ledger & Offline         │   │
+│  │ Auto-Sync       │  │ Variety Engine       │  │ Cache (localStorage)          │   │
+│  └──────┬───────┘  └─────────┬─────────┘  └────────────┬─────────────┘   │
 └─────────┼────────────────────┼─────────────────────────┼────────────────┘
           │                    │                         │
           ▼                    ▼                         ▼
 ┌──────────────────┐  ┌─────────────────────┐  ┌──────────────────────────┐
-│ Public Live APIs │  │ Spring Boot 3.3 API │  │ Client-Side Utilities    │
-│ • Open-Meteo 16d │  │ • JWT OTP Auth      │  │ • Canvas WebP Compressor │
-│ • Photon BBox    │  │ • Gemini Vision OCR │  │ • Web Speech API (hi-IN) │
-│ • Nominatim/IP   │  │ • PostgreSQL Ledger │  │ • Haversine Geo-Sorter   │
+│ Public Live APIs    │  │ Spring Boot 3.3 API.    │  │ Client-Side Utilities         │
+│ • Open-Meteo 16d.   │  │ • JWT OTP Auth          │  │ • Canvas WebP Compressor      │
+│ • Photon BBox       │  │ • Gemini Vision OCR     │  │ • Web Speech API (hi-IN).     │
+│ • Nominatim/IP      │  │ • PostgreSQL Ledger     │  │ • Haversine Geo-Sorter        │
 └──────────────────┘  └─────────────────────┘  └──────────────────────────┘
 ```
 
@@ -130,8 +130,8 @@ krishicore-frontend/
 
 ### 1. Clone & Install
 ```bash
-git clone [https://github.com/](https://github.com/)<your-username>/krishicore-frontend.git
-cd krishicore-frontend
+git clone [https://github.com/](https://github.com/)tyagigolu02/krishicore.git
+cd krishicore
 npm install
 ```
 
